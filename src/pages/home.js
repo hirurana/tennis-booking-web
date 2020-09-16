@@ -20,6 +20,11 @@ const CurrentClock = styled.div`
 `;
 
 const Home = props => {
+  useEffect(() => {
+    // update the document title
+    document.title = 'Bookings - UCL TB';
+  });
+
   // get session details from server API via GQL query
   const { data, loading, error, fetchMore } = useQuery(GET_SESSIONS, {
     pollInterval: 1000
@@ -41,24 +46,6 @@ const Home = props => {
 
   // if there is an error display message
   if (error || user_data_error) return `Error! ${error.message}`;
-
-  // add session.id to list of sessions to show the book button
-  const showBookButton = session => {
-    setBookingButtons(() => {
-      const sessionItems = [...bookingButtons.sessionItems, session.id];
-      return { sessionItems };
-    });
-  };
-
-  // remove session.id to list of sessions to show the book button so is hidden
-  const hideBookButton = session => {
-    setBookingButtons(() => {
-      const sessionItems = bookingButtons.sessionItems.filter(
-        i => i !== session.id
-      );
-      return { sessionItems };
-    });
-  };
 
   // get user's bookings to highlight as booked on load
   // (this could all be fixed with just a better gql query)

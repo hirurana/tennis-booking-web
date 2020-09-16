@@ -11,7 +11,7 @@ const SIGNIN_USER = gql`
 const SignIn = props => {
   useEffect(() => {
     // update the document title
-    document.title = 'Sign In — Notedly';
+    document.title = 'Sign In — UCL TB';
   });
   const client = useApolloClient();
   const [signIn, { loading, error }] = useMutation(SIGNIN_USER, {

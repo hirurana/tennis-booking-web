@@ -31,6 +31,11 @@ const Form = styled.form`
 
 // include the props passed to the component for later use
 const SignUp = props => {
+  useEffect(() => {
+    // update the document title
+    document.title = 'Sign Up — UCL TB';
+  });
+
   const [values, setValues] = useState();
   const onChange = event => {
     setValues({
