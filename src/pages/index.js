@@ -29,7 +29,7 @@ const Pages = () => {
   );
 };
 
-const PrivateRoute = ({ component: component, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
   const { loading, error, data } = useQuery(IS_LOGGED_IN);
   //if the data is loading, display a loading message
   if (loading) return <p>Loading...</p>;
