@@ -1,5 +1,12 @@
 import React, { useRef } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { useQuery, gql } from '@apollo/client';
+
+const IS_LOGGED_IN = gql`
+  {
+    isLoggedIn @client
+  }
+`;
 
 // import shared layout component
 import Layout from '../components/Layout';
@@ -14,11 +21,38 @@ const Pages = () => {
   return (
     <Router>
       <Layout>
-        <Route exact path="/" component={Home} />
+        <PrivateRoute exact path="/" component={Home} />
         <Route path="/signup" component={SignUp} />
         <Route path="/signin" component={SignIn} />
       </Layout>
     </Router>
   );
 };
+
+const PrivateRoute = ({ component: component, ...rest }) => {
+  const { loading, error, data } = useQuery(IS_LOGGED_IN);
+  //if the data is loading, display a loading message
+  if (loading) return <p>Loading...</p>;
+
+  if (error) return <p>Error!</p>;
+
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        data.isLoggedIn === true ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/signin',
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+};
+
 export default Pages;
