@@ -71,7 +71,7 @@ const Header = props => {
     setLogButton(0);
   };
 
-  const { data, client } = useQuery(IS_LOGGED_IN);
+  const { data, client, refetch } = useQuery(IS_LOGGED_IN);
   const { data: user_data, loading, error } = useQuery(GET_USER_DATA);
 
   return (
@@ -102,6 +102,8 @@ const Header = props => {
                 client.resetStore();
                 // update the local state
                 client.writeData({ data: { isLoggedIn: false } });
+                //
+                refetch();
                 // redirect the user to the home page
                 props.history.push('/signin');
               }}
