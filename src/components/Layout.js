@@ -1,8 +1,16 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { useQuery, gql } from '@apollo/client';
 
 import Header from './Header';
 import Bookings from './Bookings';
+
+//get login status
+const IS_LOGGED_IN = gql`
+  {
+    isLoggedIn @client
+  }
+`;
 
 // component styles
 const Wrapper = styled.div`
@@ -33,12 +41,13 @@ const Main = styled.main`
   }
 `;
 
-const Layout = ({ children }, props) => {
+const Layout = ({ children }) => {
+  const { data, client } = useQuery(IS_LOGGED_IN);
   return (
     <React.Fragment>
       <Header />
       <Wrapper>
-        <Bookings />
+        {data.isLoggedIn ? <Bookings /> : null}
         {/* render home/signin/signup in the main section*/}
         <Main>{children}</Main>
       </Wrapper>
