@@ -102,8 +102,6 @@ const Header = props => {
                 client.resetStore();
                 // update the local state
                 client.writeData({ data: { isLoggedIn: false } });
-                //
-                refetch();
                 // redirect the user to the home page
                 props.history.push('/signin');
               }}
