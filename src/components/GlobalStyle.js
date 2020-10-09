@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import normalize from 'normalize.css';
+import { createGlobalStyle } from 'styled-components'
+import normalize from 'normalize.css'
 
 // we can write our CSS as a JS template literal
 export default createGlobalStyle`
@@ -36,4 +36,4 @@ export default createGlobalStyle`
   pre {
     max-width: 100%;
   }
-`;
+`
