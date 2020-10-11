@@ -4,11 +4,6 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useQuery, gql } from '@apollo/client'
 
-// import custom components
-import { Button } from 'react-bootstrap'
-import BookButton from '../components/BookButton'
-import SessionItem from '../components/SessionItem'
-import Clock from 'react-live-clock'
 // import graphQL queries used in this component
 import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
 import BookingPage from './book'
@@ -56,86 +51,5 @@ const Home = props => {
     })
 
     return <BookingPage {...{ user_data, data }}></BookingPage>
-
-    // if data is successful display data in UI
-    return (
-        <div>
-            <CurrentClock>
-                <Clock format={'dddd, Do MMMM, h:mm a'} />
-            </CurrentClock>
-
-            <ul
-                style={{ position: 'relative', top: '20px', listStyle: 'none' }}
-            >
-                {data.sessions.map(session => (
-                    /* map each session as a list item*/
-                    <li key={session.id}>
-                        {/* Border styles and margins change when user clicks a booking to
-              present confirm booking button.
-              Colour of the session item changes depending on if user has Booked
-              the session or if the session is full*/}
-                        <SessionItem
-                            key={session.id}
-                            onClick={() => {
-                                setBookingButton(
-                                    bookingButton === session.id
-                                        ? null
-                                        : session.id,
-                                )
-                            }}
-                            style={{
-                                display: 'inline-flex',
-                                borderRadius:
-                                    bookingButton === session.id &&
-                                    !!(
-                                        session.maxSlots - session.slotsBooked
-                                    ) &&
-                                    !initBookedSessions.includes(session.id)
-                                        ? '10px 10px 0 0'
-                                        : '10px',
-                                margin:
-                                    bookingButton === session.id &&
-                                    !!(
-                                        session.maxSlots - session.slotsBooked
-                                    ) &&
-                                    !initBookedSessions.includes(session.id)
-                                        ? '0'
-                                        : '0 0 10px 0',
-                                backgroundColor: !!initBookedSessions.includes(
-                                    session.id,
-                                )
-                                    ? '#f26640'
-                                    : !(session.maxSlots - session.slotsBooked)
-                                    ? '#dc3545'
-                                    : '#e1ded1',
-                            }}
-                        >
-                            <div>
-                                Date: {session.startTime.slice(0, 10)} Time:{' '}
-                                {session.startTime.slice(11)} has{' '}
-                                {session.maxSlots - session.slotsBooked} slots
-                                available
-                                {initBookedSessions.includes(session.id)
-                                    ? ' Booked!'
-                                    : null}
-                            </div>
-                        </SessionItem>
-                        {/* Only present the book button if user has clicked the session item
-              and there are still slot available and the user hasn't already booked it */}
-                        {bookingButton === session.id &&
-                        !!(session.maxSlots - session.slotsBooked) &&
-                        !initBookedSessions.includes(session.id) ? (
-                            <BookButton
-                                sessionId={session.id}
-                                onClickBook={() => {
-                                    initBookedSessions.push(session.id)
-                                }}
-                            />
-                        ) : null}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
 }
 export default Home

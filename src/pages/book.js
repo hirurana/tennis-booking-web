@@ -1,15 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Accordion, Button, Card } from 'react-bootstrap'
+import { useMutation } from '@apollo/client'
+import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
+import { CREATE_BOOKING } from '../gql/mutation'
 
 const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
-    const sessions = immutableSessions.map(immSess => {
-        const mutable = { ...immSess }
-        mutable['startTime'] = new Date(immSess.startTime)
-        mutable['endTime'] = new Date(immSess.startTime)
-        mutable['endTime'].setHours(
-            mutable.endTime.getHours() + mutable.duration,
-        )
-        return mutable
-    })
+    const sessions = immutableSessions
+        .map(immSess => {
+            const mutable = { ...immSess }
+            mutable['startTime'] = new Date(immSess.startTime)
+            mutable['endTime'] = new Date(immSess.startTime)
+            mutable['endTime'].setHours(
+                mutable.endTime.getHours() + mutable.duration,
+            )
+            return mutable
+        })
+        .filter(session => session.endTime > new Date())
 
     // split sessions up into days
     const days = {}
@@ -79,7 +85,6 @@ const BookingDay = ({ day, sessions }) => {
             millis => millis / 3600 / 1000,
         )
     })
-    console.log(courtTimeBuffers)
 
     const bufferedCourts = {}
     Object.keys(courts).forEach(courtIndex => {
@@ -90,30 +95,12 @@ const BookingDay = ({ day, sessions }) => {
         }
     })
 
-    console.log(bufferedCourts)
-
     return (
         <div>
             <h3>{day}</h3>
-            Session count: {sessions.length}
             <div id="container" style={{ padding: '2em' }}>
-                <div className="d-flex justify-content-between">
-                    {/* <div style={{ width: `${fr}%` }}>Court Number</div> */}
-                    {Object.values(hours).map(hour => (
-                        <div
-                            key={hour}
-                            style={{ width: `${fr}%`, marginLeft: '-0.5em' }}
-                        >
-                            {hour}
-                        </div>
-                    ))}
-                    <div style={{ width: `0%` }}>
-                        {hours[hours.length - 1] + 1}
-                    </div>
-                </div>
                 {Object.keys(bufferedCourts).map(courtIndex => (
-                    <div key={courtIndex} className="d-flex">
-                        {/* <div style={{ width: `${fr}%` }}>{courtIndex}</div> */}
+                    <div key={courtIndex} className="d-flex align-items-center">
                         {Object.values(bufferedCourts[courtIndex]).map(
                             (sessionOrBuffer, i) => {
                                 if (typeof sessionOrBuffer === 'number') {
@@ -130,17 +117,11 @@ const BookingDay = ({ day, sessions }) => {
                                     }
                                 } else {
                                     return (
-                                        <div
+                                        <SessionCard
                                             key={i}
-                                            style={{
-                                                border: `1px solid black`,
-                                                width: `${sessionOrBuffer.duration *
-                                                    fr}%`,
-                                            }}
-                                        >
-                                            {sessionOrBuffer.address}{' '}
-                                            {sessionOrBuffer.level}
-                                        </div>
+                                            session={sessionOrBuffer}
+                                            fr={fr}
+                                        ></SessionCard>
                                     )
                                 }
                             },
@@ -149,6 +130,80 @@ const BookingDay = ({ day, sessions }) => {
                 ))}
             </div>
         </div>
+    )
+}
+
+const SessionCard = ({ session, fr }) => {
+    const [createBooking] = useMutation(CREATE_BOOKING, {
+        variables: {
+            id: session.id,
+        },
+        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+    })
+
+    const colors = {
+        Beginner: '#55efc4',
+        Intermediate: '#fdcb6e',
+        Advanced: '#ff7675',
+        Society: '#74b9ff',
+    }
+
+    return (
+        <Accordion
+            style={{
+                width: `calc(${session.duration * fr}%)`,
+                padding: '0.25em',
+            }}
+        >
+            <Card
+                style={{ borderRadius: 16, borderColor: colors[session.level] }}
+            >
+                <Accordion.Toggle
+                    as={Card.Body}
+                    eventKey="0"
+                    style={{ cursor: 'pointer' }}
+                >
+                    <h6>
+                        {session.startTime.toLocaleTimeString('en-UK', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
+                        -
+                        {session.endTime.toLocaleTimeString('en-UK', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
+                    </h6>
+                    <h6>{session.address}</h6>
+                    {session.level} {session.slotsBooked} / {session.maxSlots}
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                    <Card.Body
+                        style={{
+                            paddingTop: '0px',
+                        }}
+                    >
+                        <div className="d-flex align-items-center">
+                            <Button
+                                onClick={e => {
+                                    e.preventDefault()
+                                    createBooking()
+                                }}
+                            >
+                                Book
+                            </Button>
+                            <span
+                                style={{
+                                    marginLeft: '1em',
+                                }}
+                            >
+                                (i)
+                            </span>
+                        </div>
+                    </Card.Body>
+                </Accordion.Collapse>
+            </Card>
+        </Accordion>
     )
 }
 

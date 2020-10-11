@@ -5,7 +5,7 @@ import Clock from 'react-live-clock'
 import { useQuery, gql } from '@apollo/client'
 import { Link, withRouter } from 'react-router-dom'
 
-import Button from './Button'
+import { Button } from 'react-bootstrap'
 
 // local query
 const IS_LOGGED_IN = gql`

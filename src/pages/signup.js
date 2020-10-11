@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Button from '../components/Button'
+import { Button } from 'react-bootstrap'
 import { useMutation, useApolloClient, gql } from '@apollo/client'
 
 import UserForm from '../components/UserForm'

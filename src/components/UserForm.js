@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Button from './Button'
+import { Button } from 'react-bootstrap'
 const Wrapper = styled.div`
     border: 1px solid #f5f4f0;
     max-width: 500px;
