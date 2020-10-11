@@ -135,9 +135,9 @@ const Bookings = props => {
                         <p>Click to cancel</p>
                     </div>
                     {/* if user has bookings show them otherwise display no bookings*/}
-                    {!!data.me.user_sessions.length ? (
+                    {!!data.me.sessions.length ? (
                         <BookingsList>
-                            {data.me.user_sessions.map(session => (
+                            {data.me.sessions.map(session => (
                                 <li key={session.id}>
                                     {/* change the style of the booking item when the user clicks
                   on a booking*/}
@@ -164,12 +164,8 @@ const Bookings = props => {
                                                     : '#e1ded1',
                                         }}
                                     >
-                                        Date:{' '}
-                                        {session.session_datetime.slice(0, 10)}
-                                        <p>
-                                            at{' '}
-                                            {session.session_datetime.slice(11)}
-                                        </p>
+                                        Date: {session.startTime.slice(0, 10)}
+                                        <p>at {session.startTime.slice(11)}</p>
                                     </BookingItem>
                                     {/* if user clicked on this booking then show the cancel button*/}
                                     {cancelButton === session.id ? (
