@@ -74,6 +74,8 @@ const Header = props => {
     const { data, client, refetch } = useQuery(IS_LOGGED_IN)
     const { data: user_data, loading, error } = useQuery(GET_USER_DATA)
 
+    refetch()
+
     return (
         <HeaderBar>
             <MainTitle>LOGO UCL Society Bookings | Tennis</MainTitle>
