@@ -13,56 +13,156 @@ const BookingDay = ({ day, sessions }) => {
         courts[session.courtIndex].push(session)
     }
 
-    const minTime = new Date(sessions[0].startTime)
+    const minTime = sessions[0].startTime
     var maxTime = minTime
     Object.values(sessions).forEach(session => {
-        const sessionEnd = new Date(session.startTime)
-        sessionEnd.setHours(sessionEnd.getHours() + session.duration)
-        if (sessionEnd > maxTime) {
-            maxTime = sessionEnd
+        if (session.endTime > maxTime) {
+            maxTime = session.endTime
         }
     })
-    console.log(minTime.toTimeString())
-    console.log(maxTime.toTimeString())
 
     const hours = []
-    for (let i = 0; i <= (maxTime - minTime) / 3600 / 1000; i++) {
+    for (let i = 0; i < (maxTime - minTime) / 3600 / 1000; i++) {
         hours.push(minTime.getHours() + i)
     }
+    const fr = 100 / hours.length
 
-    setConfiguration({ gridColumns: hours.length + 1 })
+    const courtTimeBuffers = {}
+    Object.keys(courts).forEach(courtIndex => {
+        // check court start time
+
+        courtTimeBuffers[courtIndex] = [
+            courts[courtIndex][0].startTime - minTime,
+        ]
+        for (let i = 1; i < courts[courtIndex].length; i++) {
+            courtTimeBuffers[courtIndex].push(
+                courts[courtIndex][i].startTime -
+                    courts[courtIndex][i - 1].endTime,
+            )
+        }
+        courtTimeBuffers[courtIndex] = courtTimeBuffers[courtIndex].map(
+            millis => millis / 3600 / 1000,
+        )
+    })
+
+    const bufferedCourts = {}
+    Object.keys(courts).forEach(courtIndex => {
+        bufferedCourts[courtIndex] = []
+        for (let i = 0; i < courts[courtIndex].length; i++) {
+            bufferedCourts[courtIndex].push(courtTimeBuffers[courtIndex][i])
+            bufferedCourts[courtIndex].push(courts[courtIndex][i])
+        }
+    })
 
     return (
         <div>
             <h3>{day}</h3>
-            Session count: {sessions.length}
-            <div>
-                <Container>
-                    <Row>
-                        <Col sm={1}>Court Number</Col>
-                        {Object.values(hours).map(hour => (
-                            <Col sm={1} key={hour}>
-                                {hour}
-                            </Col>
-                        ))}
-                    </Row>
-                    {Object.keys(courts).map(courtIndex => (
-                        <Row key={courtIndex}>
-                            <Col sm={1}>{courtIndex}</Col>
-                            {Object.values(courts[courtIndex]).map(session => (
-                                <Col
-                                    key={session.id}
-                                    sm={session.duration}
-                                    style={{ border: `1px solid black` }}
-                                >
-                                    {session.address} {session.level}
-                                </Col>
-                            ))}
-                        </Row>
-                    ))}
-                </Container>
+            <div id="container" style={{ padding: '2em' }}>
+                {Object.keys(bufferedCourts).map(courtIndex => (
+                    <div key={courtIndex} className="d-flex align-items-center">
+                        {Object.values(bufferedCourts[courtIndex]).map(
+                            (sessionOrBuffer, i) => {
+                                if (typeof sessionOrBuffer === 'number') {
+                                    if (sessionOrBuffer > 0) {
+                                        return (
+                                            <div
+                                                key={i}
+                                                style={{
+                                                    width: `${sessionOrBuffer *
+                                                        fr}%`,
+                                                }}
+                                            ></div>
+                                        )
+                                    }
+                                } else {
+                                    return (
+                                        <SessionCard
+                                            key={i}
+                                            session={sessionOrBuffer}
+                                            fr={fr}
+                                        ></SessionCard>
+                                    )
+                                }
+                            },
+                        )}
+                    </div>
+                ))}
             </div>
         </div>
+    )
+}
+
+const SessionCard = ({ session, fr }) => {
+    const [createBooking] = useMutation(CREATE_BOOKING, {
+        variables: {
+            id: session.id,
+        },
+        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+    })
+
+    const colors = {
+        Beginner: '#55efc4',
+        Intermediate: '#fdcb6e',
+        Advanced: '#ff7675',
+        Society: '#74b9ff',
+    }
+
+    return (
+        <Accordion
+            style={{
+                width: `calc(${session.duration * fr}%)`,
+                padding: '0.25em',
+            }}
+        >
+            <Card
+                style={{ borderRadius: 16, borderColor: colors[session.level] }}
+            >
+                <Accordion.Toggle
+                    as={Card.Body}
+                    eventKey="0"
+                    style={{ cursor: 'pointer' }}
+                >
+                    <h6>
+                        {session.startTime.toLocaleTimeString('en-UK', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
+                        -
+                        {session.endTime.toLocaleTimeString('en-UK', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
+                    </h6>
+                    <h6>{session.address}</h6>
+                    {session.level} {session.slotsBooked} / {session.maxSlots}
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                    <Card.Body
+                        style={{
+                            paddingTop: '0px',
+                        }}
+                    >
+                        <div className="d-flex align-items-center">
+                            <Button
+                                onClick={e => {
+                                    e.preventDefault()
+                                    createBooking()
+                                }}
+                            >
+                                Book
+                            </Button>
+                            <span
+                                style={{
+                                    marginLeft: '1em',
+                                }}
+                            >
+                                (i)
+                            </span>
+                        </div>
+                    </Card.Body>
+                </Accordion.Collapse>
+            </Card>
+        </Accordion>
     )
 }
 

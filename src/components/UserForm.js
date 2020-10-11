@@ -80,6 +80,7 @@ const UserForm = props => {
                     onChange={onChange}
                 />
                 <Button type="submit">Submit</Button>
+                {props.formType === 'signIn' ? <p>Forgot Password</p> : null}
             </Form>
         </Wrapper>
     )

@@ -6,7 +6,7 @@ import { useQuery, gql } from '@apollo/client'
 
 // import graphQL queries used in this component
 import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
-import BookingPage from './book'
+import BookingPage from '../components/book'
 
 // position live clock on top right
 const CurrentClock = styled.div`
