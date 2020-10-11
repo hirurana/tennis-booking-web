@@ -4,7 +4,7 @@ const DELETE_BOOKING = gql`
     mutation deleteBooking($id: ID!) {
         deleteBooking(id: $id) {
             id
-            slots_booked
+            slotsBooked
         }
     }
 `
@@ -12,7 +12,7 @@ const DELETE_BOOKING = gql`
 const CREATE_BOOKING = gql`
     mutation createBooking($id: ID!) {
         createBooking(id: $id) {
-            slots_booked
+            slotsBooked
         }
     }
 `

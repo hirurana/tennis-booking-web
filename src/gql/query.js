@@ -5,10 +5,10 @@ const GET_BOOKINGS = gql`
         me {
             id
             username
-            user_sessions {
+            sessions {
                 id
-                session_datetime
-                slots_booked
+                startTime
+                slotsBooked
             }
         }
     }
@@ -18,17 +18,21 @@ const GET_SESSIONS = gql`
     query sessions {
         sessions {
             id
-            session_datetime
-            max_slots
-            slots_booked
+            startTime
+            address
+            duration
+            level
+            courtIndex
+            maxSlots
+            slotsBooked
             participants {
                 id
                 username
             }
-            session_author {
+            author {
                 username
             }
-            session_updated_by {
+            lastUpdatedBy {
                 username
             }
         }

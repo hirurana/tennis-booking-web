@@ -5,12 +5,13 @@ import styled from 'styled-components'
 import { useQuery, gql } from '@apollo/client'
 
 // import custom components
-import Button from '../components/Button'
+import { Button } from 'react-bootstrap'
 import BookButton from '../components/BookButton'
 import SessionItem from '../components/SessionItem'
 import Clock from 'react-live-clock'
 // import graphQL queries used in this component
 import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
+import BookingPage from './book'
 
 // position live clock on top right
 const CurrentClock = styled.div`
@@ -50,9 +51,11 @@ const Home = props => {
     // get user's bookings to highlight as booked on load
     // (this could all be fixed with just a better gql query)
     const initBookedSessions = []
-    user_data.me.user_sessions.forEach(sesh => {
+    user_data.me.sessions.forEach(sesh => {
         initBookedSessions.push(sesh.id)
     })
+
+    return <BookingPage {...{ user_data, data }}></BookingPage>
 
     // if data is successful display data in UI
     return (
@@ -85,7 +88,7 @@ const Home = props => {
                                 borderRadius:
                                     bookingButton === session.id &&
                                     !!(
-                                        session.max_slots - session.slots_booked
+                                        session.maxSlots - session.slotsBooked
                                     ) &&
                                     !initBookedSessions.includes(session.id)
                                         ? '10px 10px 0 0'
@@ -93,7 +96,7 @@ const Home = props => {
                                 margin:
                                     bookingButton === session.id &&
                                     !!(
-                                        session.max_slots - session.slots_booked
+                                        session.maxSlots - session.slotsBooked
                                     ) &&
                                     !initBookedSessions.includes(session.id)
                                         ? '0'
@@ -102,18 +105,15 @@ const Home = props => {
                                     session.id,
                                 )
                                     ? '#f26640'
-                                    : !(
-                                          session.max_slots -
-                                          session.slots_booked
-                                      )
+                                    : !(session.maxSlots - session.slotsBooked)
                                     ? '#dc3545'
                                     : '#e1ded1',
                             }}
                         >
                             <div>
-                                Date: {session.session_datetime.slice(0, 10)}{' '}
-                                Time: {session.session_datetime.slice(11)} has{' '}
-                                {session.max_slots - session.slots_booked} slots
+                                Date: {session.startTime.slice(0, 10)} Time:{' '}
+                                {session.startTime.slice(11)} has{' '}
+                                {session.maxSlots - session.slotsBooked} slots
                                 available
                                 {initBookedSessions.includes(session.id)
                                     ? ' Booked!'
@@ -123,7 +123,7 @@ const Home = props => {
                         {/* Only present the book button if user has clicked the session item
               and there are still slot available and the user hasn't already booked it */}
                         {bookingButton === session.id &&
-                        !!(session.max_slots - session.slots_booked) &&
+                        !!(session.maxSlots - session.slotsBooked) &&
                         !initBookedSessions.includes(session.id) ? (
                             <BookButton
                                 sessionId={session.id}
