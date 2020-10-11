@@ -27,7 +27,7 @@ const HeaderBar = styled.header`
     width: 100%;
     padding: 0.5em 1em 0 3em;
     display: flex;
-    height: 175px;
+    height: 125px;
     position: fixed;
     align-items: center;
     background-color: #082244;

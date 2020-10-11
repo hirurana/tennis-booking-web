@@ -6,9 +6,12 @@ const Wrapper = styled.div`
     max-width: 500px;
     padding: 1em;
     margin: 0 auto;
+    background-color: #fff;
+    border-radius: 16px;
 `
 const Form = styled.form`
     label,
+    background_color: #fff,
     input {
         display: block;
         line-height: 2em;
