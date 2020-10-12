@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap'
 import { useMutation, useApolloClient, gql } from '@apollo/client'
 
 import UserForm from '../components/UserForm'
-import Hero from '../img/hero.mp4'
 
 const SIGNUP_USER = gql`
     mutation signUp($email: String!, $username: String!, $password: String!) {
@@ -65,23 +64,6 @@ const SignUp = props => {
 
     return (
         <React.Fragment>
-            <video
-                autoPlay
-                loop
-                muted
-                style={{
-                    position: 'absolute',
-                    width: '100%',
-                    left: '50%',
-                    top: '50%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transform: 'translate(-50%,-50%)',
-                    zIndex: '-1',
-                }}
-            >
-                <source src={Hero} type="video/mp4" />
-            </video>
             <UserForm action={signUp} formType="signup" />
             {loading && <p>Loading...</p>}
             {error && <p>Error creating an account!</p>}

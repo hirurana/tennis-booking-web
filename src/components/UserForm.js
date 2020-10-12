@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'react-bootstrap'
+import Hero from '../img/hero.mp4'
+
 const Wrapper = styled.div`
     border: 1px solid #f5f4f0;
     max-width: 500px;
@@ -33,6 +35,23 @@ const UserForm = props => {
     }
     return (
         <Wrapper>
+            <video
+                autoPlay
+                loop
+                muted
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    left: '50%',
+                    top: '50%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transform: 'translate(-50%,-50%)',
+                    zIndex: '-1',
+                }}
+            >
+                <source src={Hero} type="video/mp4" />
+            </video>
             {/* Display the appropriate form header */}
             {props.formType === 'signup' ? (
                 <h2>Sign Up</h2>

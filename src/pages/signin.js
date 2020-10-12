@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useMutation, useApolloClient, gql } from '@apollo/client'
 import UserForm from '../components/UserForm'
-import Hero from '../img/hero.mp4'
 
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 const SIGNIN_USER = gql`
@@ -27,23 +26,6 @@ const SignIn = props => {
     })
     return (
         <React.Fragment>
-            <video
-                autoPlay
-                loop
-                muted
-                style={{
-                    position: 'absolute',
-                    width: '100%',
-                    left: '50%',
-                    top: '50%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transform: 'translate(-50%,-50%)',
-                    zIndex: '-1',
-                }}
-            >
-                <source src={Hero} type="video/mp4" />
-            </video>
             <UserForm action={signIn} formType="signIn" />
             {/* if the data is loading, display a loading message*/}{' '}
             {loading && <p>Loading...</p>}
