@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'react-bootstrap'
+import { useMutation } from '@apollo/client'
+
 import Hero from '../img/hero.mp4'
 
 const Wrapper = styled.div`
@@ -33,6 +35,7 @@ const UserForm = props => {
             [event.target.name]: event.target.value,
         })
     }
+
     return (
         <Wrapper>
             <video
@@ -55,6 +58,14 @@ const UserForm = props => {
             {/* Display the appropriate form header */}
             {props.formType === 'signup' ? (
                 <h2>Sign Up</h2>
+            ) : props.formType === 'forgotPassword' ? (
+                <React.Fragment>
+                    <h2>Forgot Password</h2>
+                    <p>
+                        If the account exists, a password reset link will be
+                        emailed
+                    </p>
+                </React.Fragment>
             ) : (
                 <h2>Sign In</h2>
             )}{' '}
@@ -89,17 +100,25 @@ const UserForm = props => {
                     placeholder="Email"
                     onChange={onChange}
                 />
-                <label htmlFor="password">Password:</label>
-                <input
-                    required
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={onChange}
-                />
-                <Button type="submit">Submit</Button>
-                {props.formType === 'signIn' ? <p>Forgot Password</p> : null}
+                {props.formType != 'forgotPassword' ? (
+                    <React.Fragment>
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            required
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Password"
+                            onChange={onChange}
+                        />
+                        <Button type="submit">Submit</Button>
+                    </React.Fragment>
+                ) : (
+                    <Button type="submit">Send Link</Button>
+                )}
+                {props.formType === 'signIn' ? (
+                    <a href="/forgotpassword">Forgot Password</a>
+                ) : null}
             </Form>
         </Wrapper>
     )

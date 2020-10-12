@@ -15,6 +15,7 @@ import Layout from '../components/Layout'
 import Home from './home'
 import SignUp from './signup'
 import SignIn from './signin'
+import ForgotPassword from './forgotpassword'
 
 // define routes
 const Pages = () => {
@@ -24,6 +25,7 @@ const Pages = () => {
                 <PrivateRoute exact path="/" component={Home} />
                 <Route path="/signup" component={SignUp} />
                 <Route path="/signin" component={SignIn} />
+                <Route path="/forgotpassword" component={ForgotPassword} />
             </Layout>
         </Router>
     )

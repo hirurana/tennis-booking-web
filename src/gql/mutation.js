@@ -17,4 +17,12 @@ const CREATE_BOOKING = gql`
     }
 `
 
+const CREATE_UNIQUE_LINK = gql`
+    mutation createLink($email: String!) {
+        createLink(email: $email) {
+            id
+        }
+    }
+`
+
 export { DELETE_BOOKING, CREATE_BOOKING }
