@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Accordion, Button, Card, Nav } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import styled from 'styled-components'
@@ -15,6 +15,8 @@ const LoginItems = styled.div`
 `
 
 const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
+    const [filter, setFilter] = useState('All')
+
     const sessions = immutableSessions
         .map(immSess => {
             const mutable = { ...immSess }
@@ -26,6 +28,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
             return mutable
         })
         .filter(session => session.endTime > new Date())
+        .filter(session => filter === 'All' || session.level === filter)
 
     // split sessions up into days
     const days = {}
@@ -43,18 +46,19 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
             <LoginItems>
                 <p>{3 - user_data.me.sessions.length} slots remaining</p>
                 <Nav>
-                    <Nav.Item>
-                        <Button>All</Button>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Button>Beginner</Button>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Button>Intermediate</Button>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Button>Advanced</Button>
-                    </Nav.Item>
+                    {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
+                        filterLabel => (
+                            <Nav.Item key={filterLabel}>
+                                <Button
+                                    onClick={() => {
+                                        setFilter(filterLabel)
+                                    }}
+                                >
+                                    {filterLabel}
+                                </Button>
+                            </Nav.Item>
+                        ),
+                    )}
                 </Nav>
                 <Clock
                     format={'ddd, Do MMM HH:mm:ss'}
