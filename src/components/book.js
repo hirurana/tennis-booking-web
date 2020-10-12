@@ -42,10 +42,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
         <div>
             <LoginItems>
                 <p>{3 - user_data.me.sessions.length} slots remaining</p>
-                <Nav
-                    activeKey="/home"
-                    onSelect={selectedKey => alert(`selected ${selectedKey}`)}
-                >
+                <Nav>
                     <Nav.Item>
                         <Button>All</Button>
                     </Nav.Item>
