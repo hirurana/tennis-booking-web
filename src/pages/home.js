@@ -1,19 +1,11 @@
 // import external libs
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { useQuery, gql } from '@apollo/client'
 
 // import graphQL queries used in this component
 import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
 import BookingPage from '../components/book'
-
-// position live clock on top right
-const CurrentClock = styled.div`
-    color: '#000';
-    float: right;
-    margin: 0 20px 0 0;
-`
 
 const Home = props => {
     useEffect(() => {
@@ -50,6 +42,10 @@ const Home = props => {
         initBookedSessions.push(sesh.id)
     })
 
-    return <BookingPage {...{ user_data, data }}></BookingPage>
+    return (
+        <React.Fragment>
+            <BookingPage {...{ user_data, data }}></BookingPage>
+        </React.Fragment>
+    )
 }
 export default Home

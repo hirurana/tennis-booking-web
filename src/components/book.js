@@ -1,7 +1,18 @@
 import React from 'react'
-import { Accordion, Button, Card } from 'react-bootstrap'
+import { Accordion, Button, Card, Nav } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
+import styled from 'styled-components'
+import Clock from 'react-live-clock'
+
 import BookingDay from './BookingDay'
+
+const LoginItems = styled.div`
+    position: relative;
+    text-align: center;
+    height: 64px;
+    margin-left: auto;
+    display: inline-flex;
+`
 
 const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
     const sessions = immutableSessions
@@ -27,10 +38,33 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
         days[date].push(session)
     }
 
-    console.log(days)
-
     return (
         <div>
+            <LoginItems>
+                <p>{3 - user_data.me.sessions.length} slots remaining</p>
+                <Nav
+                    activeKey="/home"
+                    onSelect={selectedKey => alert(`selected ${selectedKey}`)}
+                >
+                    <Nav.Item>
+                        <Button>All</Button>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Button>Beginner</Button>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Button>Intermediate</Button>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Button>Advanced</Button>
+                    </Nav.Item>
+                </Nav>
+                <Clock
+                    format={'ddd, Do MMM HH:mm:ss'}
+                    ticking={true}
+                    timezone={'GB'}
+                />
+            </LoginItems>
             <h2>Booking Page</h2>
             {Object.keys(days).map(day => (
                 <BookingDay
