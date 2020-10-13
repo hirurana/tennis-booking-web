@@ -75,7 +75,19 @@ const SessionCard = ({ session, fr, user_data }) => {
                             hour: 'numeric',
                             minute: '2-digit',
                         })}
-                        {booked && <span> Booked</span>}
+                        {booked && (
+                            <span
+                                style={{
+                                    float: 'right',
+                                    backgroundColor: '#f5f4f0',
+                                    padding: '0.75em',
+                                    borderRadius: '16px',
+                                }}
+                            >
+                                {' '}
+                                Booked
+                            </span>
+                        )}
                     </h6>
                     <h6>{session.address}</h6>
                     <div className="d-flex justify-content-between">
