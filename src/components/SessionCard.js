@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Accordion, Button, Card } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOKING } from '../gql/mutation'
+import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 import SessionModal from './SessionModal'
 
-const SessionCard = ({ session, fr }) => {
+const SessionCard = ({ session, fr, user_data }) => {
     const [modalShow, setModalShow] = React.useState(false)
 
     const [createBooking] = useMutation(CREATE_BOOKING, {
@@ -13,6 +13,17 @@ const SessionCard = ({ session, fr }) => {
             id: session.id,
         },
         refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+    })
+
+    const [deleteBooking] = useMutation(DELETE_BOOKING, {
+        variables: {
+            id: session.id,
+        },
+        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+    })
+
+    const booked = user_data.me.sessions.some(bookedSession => {
+        return session.id === bookedSession.id
     })
 
     const colors = {
@@ -45,17 +56,23 @@ const SessionCard = ({ session, fr }) => {
                 >
                     <h6>
                         {session.startTime.toLocaleTimeString('en-UK', {
-                            hour: '2-digit',
+                            hour: 'numeric',
                             minute: '2-digit',
-                        })}
-                        -
+                        })}{' '}
+                        -{' '}
                         {session.endTime.toLocaleTimeString('en-UK', {
-                            hour: '2-digit',
+                            hour: 'numeric',
                             minute: '2-digit',
                         })}
                     </h6>
                     <h6>{session.address}</h6>
-                    {session.level} {session.slotsBooked} / {session.maxSlots}
+                    <div className="d-flex justify-content-between">
+                        <span>
+                            {session.level} {session.slotsBooked} /{' '}
+                            {session.maxSlots}
+                        </span>
+                        {booked && <span>Booked!</span>}
+                    </div>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
                     <Card.Body
@@ -64,15 +81,30 @@ const SessionCard = ({ session, fr }) => {
                         }}
                     >
                         <div className="d-flex align-items-center">
+                            {booked ? (
+                                <Button
+                                    variant="danger"
+                                    style={{ margin: '0.25em' }}
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        deleteBooking()
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            ) : (
+                                <Button
+                                    style={{ margin: '0.25em' }}
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        createBooking()
+                                    }}
+                                >
+                                    Book
+                                </Button>
+                            )}
                             <Button
-                                onClick={e => {
-                                    e.preventDefault()
-                                    createBooking()
-                                }}
-                            >
-                                Book
-                            </Button>
-                            <Button
+                                style={{ margin: '0.25em' }}
                                 onClick={e => {
                                     e.preventDefault()
                                     setModalShow(true)

@@ -115,6 +115,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                     key={day}
                     day={day}
                     sessions={days[day]}
+                    user_data={user_data}
                 ></BookingDay>
             ))}
         </div>

@@ -164,8 +164,19 @@ const Bookings = props => {
                                                     : '#e1ded1',
                                         }}
                                     >
-                                        Date: {session.startTime.slice(0, 10)}
-                                        <p>at {session.startTime.slice(11)}</p>
+                                        Date:{' '}
+                                        {new Date(
+                                            session.startTime,
+                                        ).toLocaleDateString()}
+                                        <p>
+                                            at{' '}
+                                            {new Date(
+                                                session.startTime,
+                                            ).toLocaleTimeString('en-UK', {
+                                                hour: 'numeric',
+                                                minute: '2-digit',
+                                            })}
+                                        </p>
                                     </BookingItem>
                                     {/* if user clicked on this booking then show the cancel button*/}
                                     {cancelButton === session.id ? (

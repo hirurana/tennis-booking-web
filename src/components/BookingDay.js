@@ -4,7 +4,7 @@ import { setConfiguration } from 'react-grid-system'
 setConfiguration({ maxScreenClass: 'xl' })
 import SessionCard from './SessionCard'
 
-const BookingDay = ({ day, sessions }) => {
+const BookingDay = ({ day, sessions, user_data }) => {
     // split sessions list into courts
     const courts = {}
     for (const session of sessions) {
@@ -61,32 +61,45 @@ const BookingDay = ({ day, sessions }) => {
             <div id="container" style={{ padding: '2em' }}>
                 {Object.keys(bufferedCourts).map(courtIndex => (
                     <div key={courtIndex} className="d-flex align-items-center">
-                        <p>Court {courtIndex}</p>
-                        {Object.values(bufferedCourts[courtIndex]).map(
-                            (sessionOrBuffer, i) => {
-                                if (typeof sessionOrBuffer === 'number') {
-                                    if (sessionOrBuffer > 0) {
+                        <div
+                            className="d-flex align-items-center align-self-stretch"
+                            style={{
+                                backgroundColor: '#f5f4f0',
+                                margin: '0.25em',
+                                borderRadius: '16px',
+                                padding: '0 1em',
+                            }}
+                        >
+                            <span>Court {courtIndex} </span>
+                        </div>
+                        <div className="d-flex flex-fill">
+                            {Object.values(bufferedCourts[courtIndex]).map(
+                                (sessionOrBuffer, i) => {
+                                    if (typeof sessionOrBuffer === 'number') {
+                                        if (sessionOrBuffer > 0) {
+                                            return (
+                                                <div
+                                                    key={i}
+                                                    style={{
+                                                        width: `${sessionOrBuffer *
+                                                            fr}%`,
+                                                    }}
+                                                ></div>
+                                            )
+                                        }
+                                    } else {
                                         return (
-                                            <div
+                                            <SessionCard
+                                                user_data={user_data}
                                                 key={i}
-                                                style={{
-                                                    width: `${sessionOrBuffer *
-                                                        fr}%`,
-                                                }}
-                                            ></div>
+                                                session={sessionOrBuffer}
+                                                fr={fr}
+                                            ></SessionCard>
                                         )
                                     }
-                                } else {
-                                    return (
-                                        <SessionCard
-                                            key={i}
-                                            session={sessionOrBuffer}
-                                            fr={fr}
-                                        ></SessionCard>
-                                    )
-                                }
-                            },
-                        )}
+                                },
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
