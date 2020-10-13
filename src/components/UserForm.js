@@ -117,7 +117,7 @@ const UserForm = props => {
                     <Button type="submit">Send Link</Button>
                 )}
                 {props.formType === 'signIn' ? (
-                    <a href="/forgotpassword">Forgot Password</a>
+                    <a href="/forgotpassword"> Forgot Password</a>
                 ) : null}
             </Form>
         </Wrapper>

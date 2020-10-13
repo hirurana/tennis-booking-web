@@ -6,6 +6,7 @@ import { useQuery, gql } from '@apollo/client'
 import { Link, withRouter } from 'react-router-dom'
 
 import { Button } from 'react-bootstrap'
+import Logo from '../img/favicon.ico'
 
 // local query
 const IS_LOGGED_IN = gql`
@@ -78,7 +79,10 @@ const Header = props => {
 
     return (
         <HeaderBar>
-            <MainTitle>LOGO UCL Society Bookings | Tennis</MainTitle>
+            <MainTitle>
+                <img src={Logo} alt="UCL Tennis Logo" height="60" /> UCL Society
+                Bookings | Tennis
+            </MainTitle>
             {data.isLoggedIn ? (
                 <LoginItems
                     onMouseLeave={hideLogButton}
