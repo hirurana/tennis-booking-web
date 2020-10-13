@@ -61,6 +61,7 @@ const BookingDay = ({ day, sessions }) => {
             <div id="container" style={{ padding: '2em' }}>
                 {Object.keys(bufferedCourts).map(courtIndex => (
                     <div key={courtIndex} className="d-flex align-items-center">
+                        <p>Court {courtIndex}</p>
                         {Object.values(bufferedCourts[courtIndex]).map(
                             (sessionOrBuffer, i) => {
                                 if (typeof sessionOrBuffer === 'number') {

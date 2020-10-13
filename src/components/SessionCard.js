@@ -16,9 +16,9 @@ const SessionCard = ({ session, fr }) => {
     })
 
     const colors = {
-        Beginner: '#55efc4',
-        Intermediate: '#fdcb6e',
-        Advanced: '#ff7675',
+        Beginner: '#c9eab9',
+        Intermediate: '#ffd6b2',
+        Advanced: '#f7b2b2',
         Society: '#74b9ff',
     }
 
@@ -30,12 +30,16 @@ const SessionCard = ({ session, fr }) => {
             }}
         >
             <Card
-                style={{ borderRadius: 16, borderColor: colors[session.level] }}
+                style={{
+                    borderRadius: 16,
+                    backgroundColor: colors[session.level],
+                    borderWidth: 0,
+                }}
             >
                 <Accordion.Toggle
                     as={Card.Body}
                     eventKey="0"
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', color: '#404040' }}
                 >
                     <h6>
                         {session.startTime.toLocaleTimeString('en-UK', {

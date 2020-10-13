@@ -6,12 +6,15 @@ import Clock from 'react-live-clock'
 
 import BookingDay from './BookingDay'
 
-const LoginItems = styled.div`
+const BookingHeader = styled.div`
     position: relative;
     text-align: center;
     height: 64px;
     margin-left: auto;
     display: inline-flex;
+    background-color: #f26640;
+    border-radius: 16px;
+    padding: 0.25em;
 `
 
 const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
@@ -43,7 +46,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
 
     return (
         <div>
-            <LoginItems>
+            <BookingHeader>
                 <p>{3 - user_data.me.sessions.length} slots remaining</p>
                 <Nav>
                     {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
@@ -61,11 +64,11 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                     )}
                 </Nav>
                 <Clock
-                    format={'ddd, Do MMM HH:mm:ss'}
+                    format={'ddd, Do MMM HH:mm'}
                     ticking={true}
                     timezone={'GB'}
                 />
-            </LoginItems>
+            </BookingHeader>
             <h2>Booking Page</h2>
             {Object.keys(days).map(day => (
                 <BookingDay
