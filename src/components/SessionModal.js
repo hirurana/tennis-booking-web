@@ -14,7 +14,10 @@ const SessionModal = props => {
     return (
         <React.Fragment>
             <Modal {...props} size="lg" centered>
-                <Modal.Header closeButton>
+                <Modal.Header
+                    closeButton
+                    style={{ background: props.color, color: '#fff' }}
+                >
                     <Modal.Title id="contained-modal-title-vcenter">
                         {props.session.startTime.toLocaleTimeString('en-UK', {
                             hour: '2-digit',

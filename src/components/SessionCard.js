@@ -16,9 +16,9 @@ const SessionCard = ({ session, fr }) => {
     })
 
     const colors = {
-        Beginner: '#c9eab9',
-        Intermediate: '#ffd6b2',
-        Advanced: '#f7b2b2',
+        Beginner: '#4CBB17',
+        Intermediate: '#FF7800',
+        Advanced: '#E60000',
         Society: '#74b9ff',
     }
 
@@ -82,6 +82,7 @@ const SessionCard = ({ session, fr }) => {
                             </Button>
                         </div>
                         <SessionModal
+                            color={colors[session.level]}
                             session={session}
                             show={modalShow}
                             onHide={() => setModalShow(false)}
