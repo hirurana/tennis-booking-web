@@ -14,7 +14,7 @@ const BookingHeader = styled.div`
     display: inline-flex;
     border-radius: 16px;
     width: 95%;
-    margin: 1em;
+    margin: 0.5em;
 `
 
 const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
@@ -86,6 +86,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                                                 : filterLabel === 'Advanced'
                                                 ? '0 16px 16px 0'
                                                 : 0,
+                                        padding: '0.75em',
                                     }}
                                 >
                                     {filterLabel}

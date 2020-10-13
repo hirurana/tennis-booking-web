@@ -58,15 +58,15 @@ const BookingDay = ({ day, sessions, user_data }) => {
     return (
         <div>
             <h3>{day}</h3>
-            <div id="container" style={{ padding: '2em' }}>
+            <div id="container" style={{ padding: '1em' }}>
                 {Object.keys(bufferedCourts).map(courtIndex => (
                     <div key={courtIndex} className="d-flex align-items-center">
                         <div
                             className="d-flex align-items-center align-self-stretch"
                             style={{
                                 backgroundColor: '#f5f4f0',
-                                margin: '0.25em',
-                                borderRadius: '16px',
+                                margin: ' 0.25em 0',
+                                borderRadius: '16px ',
                                 padding: '0 1em',
                             }}
                         >
