@@ -39,4 +39,10 @@ const GET_SESSIONS = gql`
     }
 `
 
-export { GET_BOOKINGS, GET_SESSIONS }
+const VERIFY_LINK = gql`
+    query verifyLink($uuid: String!) {
+        verifyLink(uuid: $uuid)
+    }
+`
+
+export { GET_BOOKINGS, GET_SESSIONS, VERIFY_LINK }

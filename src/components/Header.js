@@ -80,8 +80,13 @@ const Header = props => {
     return (
         <HeaderBar>
             <MainTitle>
-                <img src={Logo} alt="UCL Tennis Logo" height="60" /> UCL Society
-                Bookings | Tennis
+                <img
+                    src={Logo}
+                    alt="UCL Tennis Logo"
+                    height="100"
+                    style={{ padding: '0.25em' }}
+                />{' '}
+                UCL Society Bookings | Tennis
             </MainTitle>
             {data.isLoggedIn ? (
                 <LoginItems

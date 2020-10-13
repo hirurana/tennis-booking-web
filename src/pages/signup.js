@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'react-bootstrap'
-import { useMutation, useApolloClient, gql } from '@apollo/client'
+import { useQuery, useMutation, useApolloClient, gql } from '@apollo/client'
 
 import UserForm from '../components/UserForm'
+import { VERIFY_LINK } from '../gql/query'
 
 const SIGNUP_USER = gql`
     mutation signUp($email: String!, $username: String!, $password: String!) {
@@ -62,11 +63,32 @@ const SignUp = props => {
         },
     })
 
+    //check the link
+    const {
+        data: verifier_data,
+        loading: verifier_loading,
+        error: verifier_error,
+    } = useQuery(VERIFY_LINK, {
+        variables: { uuid: props.match.params.id },
+    })
+
+    if (verifier_loading) {
+        return 'loading...'
+    }
+
     return (
         <React.Fragment>
-            <UserForm action={signUp} formType="signup" />
-            {loading && <p>Loading...</p>}
-            {error && <p>Error creating an account!</p>}
+            {verifier_data.verifyLink ? (
+                <React.Fragment>
+                    <UserForm action={signUp} formType="signup" />
+                    {loading && <p>Loading...</p>}
+                    {error && <p>Error creating an account!</p>}
+                </React.Fragment>
+            ) : (
+                <React.Fragment>
+                    <p>Invalid link</p>
+                </React.Fragment>
+            )}
         </React.Fragment>
     )
 }

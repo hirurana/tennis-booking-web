@@ -9,7 +9,7 @@ import BookingDay from './BookingDay'
 const BookingHeader = styled.div`
     position: relative;
     text-align: center;
-    height: 64px;
+    height: auto;
     margin-left: auto;
     display: inline-flex;
     background-color: #f26640;
@@ -47,8 +47,10 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
     return (
         <div>
             <BookingHeader>
-                <p>{3 - user_data.me.sessions.length} slots remaining</p>
-                <Nav>
+                <p style={{ float: 'left' }}>
+                    {3 - user_data.me.sessions.length} slots remaining
+                </p>
+                <Nav style={{ float: 'left' }}>
                     {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
                         filterLabel => (
                             <Nav.Item key={filterLabel}>
@@ -69,7 +71,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                     timezone={'GB'}
                 />
             </BookingHeader>
-            <h2>Booking Page</h2>
+            <p>Please select a court and a time when you would like to play</p>
             {Object.keys(days).map(day => (
                 <BookingDay
                     key={day}

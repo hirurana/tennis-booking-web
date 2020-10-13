@@ -25,6 +25,22 @@ const Form = styled.form`
         margin-bottom: 1em;
     }
 `
+
+const HeroVideo = styled.video`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: fill;
+    background-size: cover;
+    transition: 1s opacity;
+`
+
 const UserForm = props => {
     // set the default state of the form
     const [values, setValues] = useState()
@@ -38,23 +54,9 @@ const UserForm = props => {
 
     return (
         <Wrapper>
-            <video
-                autoPlay
-                loop
-                muted
-                style={{
-                    position: 'absolute',
-                    width: '100%',
-                    left: '50%',
-                    top: '50%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transform: 'translate(-50%,-50%)',
-                    zIndex: '-1',
-                }}
-            >
+            <HeroVideo autoPlay loop muted>
                 <source src={Hero} type="video/mp4" />
-            </video>
+            </HeroVideo>
             {/* Display the appropriate form header */}
             {props.formType === 'signup' ? (
                 <h2>Sign Up</h2>
