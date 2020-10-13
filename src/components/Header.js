@@ -41,6 +41,7 @@ const MainTitle = styled.h1`
     margin: 0;
     padding: 0;
     display: inline;
+    font-size: 45px;
 `
 
 const LoginItems = styled.div`
@@ -86,7 +87,7 @@ const Header = props => {
                     height="100"
                     style={{ padding: '0.25em' }}
                 />{' '}
-                UCL Society Bookings | Tennis
+                UCL Tennis Court Bookings
             </MainTitle>
             {data.isLoggedIn ? (
                 <LoginItems

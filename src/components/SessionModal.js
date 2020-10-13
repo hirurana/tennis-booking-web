@@ -1,13 +1,20 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOKING } from '../gql/mutation'
+import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 
 const SessionModal = props => {
     const [createBooking] = useMutation(CREATE_BOOKING, {
         variables: {
             id: props.session.id,
+        },
+        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+    })
+
+    const [deleteBooking] = useMutation(DELETE_BOOKING, {
+        variables: {
+            id: props.sessionId,
         },
         refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
     })
@@ -50,15 +57,28 @@ const SessionModal = props => {
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
-                        onClick={e => {
-                            e.preventDefault()
-                            createBooking()
-                            props.onHide()
-                        }}
-                    >
-                        Book
-                    </Button>
+                    {props.booked ? (
+                        <Button
+                            variant="danger"
+                            style={{ margin: '0.25em' }}
+                            onClick={e => {
+                                e.preventDefault()
+                                deleteBooking()
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    ) : (
+                        <Button
+                            style={{ margin: '0.25em' }}
+                            onClick={e => {
+                                e.preventDefault()
+                                createBooking()
+                            }}
+                        >
+                            Book
+                        </Button>
+                    )}
                 </Modal.Footer>
             </Modal>
         </React.Fragment>

@@ -3,6 +3,8 @@ import { Accordion, Button, Card } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
+
+//import local libs
 import SessionModal from './SessionModal'
 
 const SessionCard = ({ session, fr, user_data }) => {
@@ -33,6 +35,13 @@ const SessionCard = ({ session, fr, user_data }) => {
         Society: '#74b9ff',
     }
 
+    const booked_colors = {
+        Beginner: '#dbf1d0',
+        Intermediate: '#ffe4cc',
+        Advanced: '#facccc',
+        Society: '#facccc',
+    }
+
     return (
         <Accordion
             style={{
@@ -45,7 +54,9 @@ const SessionCard = ({ session, fr, user_data }) => {
                     borderRadius: 8,
                     background: `linear-gradient(90deg, ${
                         colors[session.level]
-                    } 10px, #FFF 10px)`,
+                    } 10px, ${
+                        booked ? booked_colors[session.level] : '#fff'
+                    } 10px)`,
                     borderColor: colors[session.level],
                 }}
             >
@@ -64,6 +75,7 @@ const SessionCard = ({ session, fr, user_data }) => {
                             hour: 'numeric',
                             minute: '2-digit',
                         })}
+                        {booked && <span> Booked</span>}
                     </h6>
                     <h6>{session.address}</h6>
                     <div className="d-flex justify-content-between">
@@ -71,7 +83,6 @@ const SessionCard = ({ session, fr, user_data }) => {
                             {session.level} {session.slotsBooked} /{' '}
                             {session.maxSlots}
                         </span>
-                        {booked && <span>Booked!</span>}
                     </div>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
@@ -117,6 +128,7 @@ const SessionCard = ({ session, fr, user_data }) => {
                             color={colors[session.level]}
                             session={session}
                             show={modalShow}
+                            booked={booked}
                             onHide={() => setModalShow(false)}
                         />
                     </Card.Body>

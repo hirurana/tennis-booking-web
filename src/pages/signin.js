@@ -26,11 +26,10 @@ const SignIn = props => {
     })
     return (
         <React.Fragment>
-            <UserForm action={signIn} formType="signIn" />
+            <UserForm action={signIn} error={error} formType="signIn" />
             {/* if the data is loading, display a loading message*/}{' '}
             {loading && <p>Loading...</p>}
             {/* if there is an error, display a error message*/}{' '}
-            {error && <p>Error signing in!</p>}
         </React.Fragment>
     )
 }

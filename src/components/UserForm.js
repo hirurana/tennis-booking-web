@@ -113,13 +113,21 @@ const UserForm = props => {
                             placeholder="Password"
                             onChange={onChange}
                         />
+                        {props.error && (
+                            <p style={{ color: 'red' }}>
+                                Invalid Username/Password
+                            </p>
+                        )}
                         <Button type="submit">Submit</Button>
                     </React.Fragment>
                 ) : (
                     <Button type="submit">Send Link</Button>
                 )}
                 {props.formType === 'signIn' ? (
-                    <a href="/forgotpassword"> Forgot Password</a>
+                    <a href="/forgotpassword" style={{ float: 'right' }}>
+                        {' '}
+                        Forgot Password
+                    </a>
                 ) : null}
             </Form>
         </Wrapper>
