@@ -31,9 +31,11 @@ const SessionCard = ({ session, fr }) => {
         >
             <Card
                 style={{
-                    borderRadius: 16,
-                    backgroundColor: colors[session.level],
-                    borderWidth: 0,
+                    borderRadius: 8,
+                    background: `linear-gradient(90deg, ${
+                        colors[session.level]
+                    } 10px, #FFF 10px)`,
+                    borderColor: colors[session.level],
                 }}
             >
                 <Accordion.Toggle
