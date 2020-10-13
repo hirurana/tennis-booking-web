@@ -12,9 +12,9 @@ const BookingHeader = styled.div`
     height: auto;
     margin-left: auto;
     display: inline-flex;
-    background-color: #f26640;
     border-radius: 16px;
-    padding: 0.25em;
+    width: 95%;
+    margin: 1em;
 `
 
 const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
@@ -47,16 +47,45 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
     return (
         <div>
             <BookingHeader>
-                <p style={{ float: 'left' }}>
+                <p
+                    style={{
+                        float: 'left',
+                        padding: '0.75em',
+                        backgroundColor:
+                            user_data.me.sessions.length === 3
+                                ? '#E60000'
+                                : '#f5f4f0',
+                        color:
+                            user_data.me.sessions.length === 3
+                                ? '#fff'
+                                : '#000',
+                        margin: '0',
+                        borderRadius: 16,
+                    }}
+                >
                     {3 - user_data.me.sessions.length} slots remaining
                 </p>
-                <Nav style={{ float: 'left' }}>
+
+                <Nav
+                    style={{
+                        float: 'left',
+                        margin: '0 auto',
+                    }}
+                >
                     {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
                         filterLabel => (
                             <Nav.Item key={filterLabel}>
                                 <Button
                                     onClick={() => {
                                         setFilter(filterLabel)
+                                    }}
+                                    style={{
+                                        borderRadius:
+                                            filterLabel === 'All'
+                                                ? '16px 0 0 16px'
+                                                : filterLabel === 'Advanced'
+                                                ? '0 16px 16px 0'
+                                                : 0,
                                     }}
                                 >
                                     {filterLabel}
@@ -69,9 +98,18 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                     format={'ddd, Do MMM HH:mm'}
                     ticking={true}
                     timezone={'GB'}
+                    style={{
+                        float: 'right',
+                        padding: '0.75em',
+                        backgroundColor: '#f5f4f0',
+                        borderRadius: 16,
+                    }}
                 />
             </BookingHeader>
-            <p>Please select a court and a time when you would like to play</p>
+            <p style={{ textAlign: 'center' }}>
+                Please select a court and a time when you would like to play
+            </p>
+
             {Object.keys(days).map(day => (
                 <BookingDay
                     key={day}
