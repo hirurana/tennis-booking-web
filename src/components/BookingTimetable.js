@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Clock from 'react-live-clock'
 
 import BookingDay from './BookingDay'
+import CreateSessionModal from './CreateSessionModal'
 
 const BookingHeader = styled.div`
     position: relative;
@@ -21,7 +22,9 @@ const getMutableSession = immutableSession => {
     const mutable = { ...immutableSession }
     mutable['startTime'] = new Date(immutableSession.startTime)
     mutable['endTime'] = new Date(immutableSession.startTime)
-    mutable['endTime'].setHours(mutable.endTime.getHours() + mutable.duration)
+    mutable['endTime'].setMinutes(
+        mutable.endTime.getMinutes() + mutable.duration,
+    )
     return mutable
 }
 
@@ -50,10 +53,20 @@ const BookingPage = ({
         days[date].push(session)
     }
 
-    console.log(userData)
+    const [showCreate, setShowCreate] = useState(false)
 
     return (
         <div>
+            <CreateSessionModal
+                show={showCreate}
+                onClose={() => {
+                    setShowCreate(false)
+                }}
+                onConfirm={data => {
+                    setShowCreate(false)
+                }}
+                sessions={sessions}
+            ></CreateSessionModal>
             <BookingHeader>
                 <p
                     style={{
@@ -115,6 +128,16 @@ const BookingPage = ({
             <p style={{ textAlign: 'center' }}>
                 Please select a court and a time when you would like to play
             </p>
+            {userData.admin && (
+                <Button
+                    variant="success"
+                    onClick={() => {
+                        setShowCreate(true)
+                    }}
+                >
+                    Create Session
+                </Button>
+            )}
 
             {Object.keys(days).map(day => (
                 <BookingDay

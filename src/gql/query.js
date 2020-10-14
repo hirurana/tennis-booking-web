@@ -5,6 +5,7 @@ const GET_BOOKINGS = gql`
         me {
             id
             username
+            admin
             sessions {
                 id
                 startTime

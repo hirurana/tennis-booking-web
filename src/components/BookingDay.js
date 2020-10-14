@@ -4,7 +4,7 @@ import { setConfiguration } from 'react-grid-system'
 setConfiguration({ maxScreenClass: 'xl' })
 import SessionCard from './SessionCard'
 
-const BookingDay = ({ day, sessions, userData }) => {
+const BookingAddress = ({ day, sessions, userData }) => {
     // split sessions list into courts
     const courts = {}
     for (const session of sessions) {
@@ -22,11 +22,7 @@ const BookingDay = ({ day, sessions, userData }) => {
         }
     })
 
-    const hours = []
-    for (let i = 0; i < (maxTime - minTime) / 3600 / 1000; i++) {
-        hours.push(minTime.getHours() + i)
-    }
-    const fr = 100 / hours.length
+    const fr = 100 / ((maxTime - minTime) / 60 / 1000)
 
     const courtTimeBuffers = {}
     Object.keys(courts).forEach(courtIndex => {
@@ -42,7 +38,7 @@ const BookingDay = ({ day, sessions, userData }) => {
             )
         }
         courtTimeBuffers[courtIndex] = courtTimeBuffers[courtIndex].map(
-            millis => millis / 3600 / 1000,
+            millis => millis / 60 / 1000,
         )
     })
 
@@ -56,68 +52,91 @@ const BookingDay = ({ day, sessions, userData }) => {
     })
 
     return (
-        <div>
-            <h3>{day}</h3>
-            <div id="container" style={{ padding: '1em' }}>
-                {Object.keys(bufferedCourts).map(courtIndex => (
-                    <div key={courtIndex} className="d-flex align-items-center">
-                        <div
-                            className="d-flex align-items-center align-self-stretch"
-                            style={{
-                                backgroundColor: '#f5f4f0',
-                                margin: ' 0.25em 0',
-                                borderRadius: '16px ',
-                                padding: '0 1em',
-                            }}
-                        >
-                            <span>Court {courtIndex} </span>
-                        </div>
-                        <div className="d-flex flex-fill">
-                            {Object.values(bufferedCourts[courtIndex]).map(
-                                (sessionOrBuffer, i) => {
-                                    if (typeof sessionOrBuffer === 'number') {
-                                        if (sessionOrBuffer > 0) {
-                                            return (
-                                                <div
-                                                    key={i}
-                                                    style={{
-                                                        width: `${sessionOrBuffer *
-                                                            fr}%`,
-                                                    }}
-                                                ></div>
-                                            )
-                                        }
-                                    } else {
+        <div id="container" style={{ padding: '1em' }}>
+            {Object.keys(bufferedCourts).map(courtIndex => (
+                <div key={courtIndex} className="d-flex align-items-center">
+                    <div
+                        className="d-flex align-items-center align-self-stretch"
+                        style={{
+                            backgroundColor: '#f5f4f0',
+                            margin: ' 0.25em 0',
+                            borderRadius: '16px ',
+                            padding: '0 1em',
+                        }}
+                    >
+                        <span>Court {courtIndex} </span>
+                    </div>
+                    <div className="d-flex flex-fill align-items-center">
+                        {Object.values(bufferedCourts[courtIndex]).map(
+                            (sessionOrBuffer, i) => {
+                                if (typeof sessionOrBuffer === 'number') {
+                                    if (sessionOrBuffer > 0) {
                                         return (
-                                            <SessionCard
+                                            <div
                                                 key={i}
-                                                session={sessionOrBuffer}
-                                                fr={fr}
-                                                booked={userData.sessions.some(
-                                                    bookedSession =>
-                                                        sessionOrBuffer.id ===
-                                                        bookedSession.id,
-                                                )}
-                                                bookable={userData.sessions.every(
-                                                    // check if this session overlaps any booked session
-                                                    bookedSession =>
-                                                        userData.sessions
-                                                            .length < 3 && // sob is before bs
-                                                        (sessionOrBuffer.endTime <=
-                                                            bookedSession.startTime ||
-                                                            // sob is after bs
-                                                            sessionOrBuffer.startTime >=
-                                                                bookedSession.endTime),
-                                                )}
-                                            ></SessionCard>
+                                                style={{
+                                                    width: `${sessionOrBuffer *
+                                                        fr}%`,
+                                                }}
+                                            ></div>
                                         )
                                     }
-                                },
-                            )}
-                        </div>
+                                } else {
+                                    return (
+                                        <SessionCard
+                                            key={i}
+                                            session={sessionOrBuffer}
+                                            fr={fr}
+                                            booked={userData.sessions.some(
+                                                bookedSession =>
+                                                    sessionOrBuffer.id ===
+                                                    bookedSession.id,
+                                            )}
+                                            bookable={userData.sessions.every(
+                                                // check if this session overlaps any booked session
+                                                bookedSession =>
+                                                    userData.sessions.length <
+                                                        3 && // sob is before bs
+                                                    (sessionOrBuffer.endTime <=
+                                                        bookedSession.startTime ||
+                                                        // sob is after bs
+                                                        sessionOrBuffer.startTime >=
+                                                            bookedSession.endTime),
+                                            )}
+                                            admin={userData.admin}
+                                        ></SessionCard>
+                                    )
+                                }
+                            },
+                        )}
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+const BookingDay = ({ day, sessions, userData }) => {
+    // split sessions into addresses
+    const addresses = {}
+    for (const session of sessions) {
+        if (!(session.address in addresses)) {
+            addresses[session.address] = []
+        }
+        addresses[session.address].push(session)
+    }
+
+    return (
+        <div>
+            <h3>{day}</h3>
+            {Object.keys(addresses).map(address => (
+                <div key={address}>
+                    <h5>{address}</h5>{' '}
+                    <BookingAddress
+                        {...{ sessions: addresses[address], userData }}
+                    ></BookingAddress>{' '}
+                </div>
+            ))}
         </div>
     )
 }

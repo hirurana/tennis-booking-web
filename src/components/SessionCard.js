@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Accordion, Button, Card } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
+import { CREATE_BOOKING, DELETE_BOOKING, DELETE_SESSION } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 
 //import local libs
 import SessionModal from './SessionModal'
 
-const SessionCard = ({ session, fr, booked, bookable }) => {
+const SessionCard = ({ session, fr, booked, bookable, admin }) => {
     const [modalShow, setModalShow] = React.useState(false)
 
     const [createBooking] = useMutation(CREATE_BOOKING, {
@@ -18,6 +18,13 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
     })
 
     const [deleteBooking] = useMutation(DELETE_BOOKING, {
+        variables: {
+            id: session.id,
+        },
+        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+    })
+
+    const [deleteSession] = useMutation(DELETE_SESSION, {
         variables: {
             id: session.id,
         },
@@ -41,7 +48,8 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
     return (
         <Accordion
             style={{
-                width: `calc(${session.duration * fr}%)`,
+                width: `${session.duration * fr}%`,
+                minWidth: '12em',
                 padding: '0.25em',
             }}
         >
@@ -133,6 +141,18 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
                                 Info
                             </Button>
                         </div>
+                        {admin && (
+                            <Button
+                                variant="danger"
+                                style={{ margin: '0.25em' }}
+                                onClick={e => {
+                                    e.preventDefault()
+                                    deleteSession()
+                                }}
+                            >
+                                Delete Session
+                            </Button>
+                        )}
                         <SessionModal
                             show={modalShow}
                             onHide={() => setModalShow(false)}
