@@ -7,7 +7,7 @@ import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 //import local libs
 import SessionModal from './SessionModal'
 
-const SessionCard = ({ session, fr, user_data }) => {
+const SessionCard = ({ session, fr, booked, bookable }) => {
     const [modalShow, setModalShow] = React.useState(false)
 
     const [createBooking] = useMutation(CREATE_BOOKING, {
@@ -22,10 +22,6 @@ const SessionCard = ({ session, fr, user_data }) => {
             id: session.id,
         },
         refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
-    })
-
-    const booked = user_data.me.sessions.some(bookedSession => {
-        return session.id === bookedSession.id
     })
 
     const colors = {
@@ -122,6 +118,7 @@ const SessionCard = ({ session, fr, user_data }) => {
                                         e.preventDefault()
                                         createBooking()
                                     }}
+                                    disabled={!bookable}
                                 >
                                     Book
                                 </Button>

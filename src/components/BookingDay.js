@@ -94,6 +94,19 @@ const BookingDay = ({ day, sessions, user_data }) => {
                                                 key={i}
                                                 session={sessionOrBuffer}
                                                 fr={fr}
+                                                booked={user_data.me.sessions.some(
+                                                    bookedSession =>
+                                                        sessionOrBuffer.id ===
+                                                        bookedSession.id,
+                                                )}
+                                                bookable={user_data.me.sessions.every(
+                                                    // https://stackoverflow.com/questions/492994/compare-two-dates-with-javascript
+                                                    bookedSession =>
+                                                        sessionOrBuffer.startTime.getTime() !==
+                                                        new Date(
+                                                            bookedSession.startTime,
+                                                        ).getTime(),
+                                                )}
                                             ></SessionCard>
                                         )
                                     }
