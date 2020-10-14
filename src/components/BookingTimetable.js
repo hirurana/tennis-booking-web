@@ -50,6 +50,8 @@ const BookingPage = ({
         days[date].push(session)
     }
 
+    console.log(userData)
+
     return (
         <div>
             <BookingHeader>

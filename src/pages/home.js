@@ -5,7 +5,7 @@ import { useQuery, gql } from '@apollo/client'
 
 // import graphQL queries used in this component
 import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
-import BookingPage from '../components/book'
+import BookingPage from '../components/BookingTimetable'
 
 const Home = props => {
     useEffect(() => {

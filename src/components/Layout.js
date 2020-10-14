@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useQuery, gql } from '@apollo/client'
 
 import Header from './Header'
-import Bookings from './Bookings'
+import Bookings from './BookingList'
 
 //get login status
 const IS_LOGGED_IN = gql`
