@@ -134,11 +134,12 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
                             </Button>
                         </div>
                         <SessionModal
-                            color={colors[session.level]}
-                            session={session}
                             show={modalShow}
-                            booked={booked}
                             onHide={() => setModalShow(false)}
+                            session={session}
+                            booked={booked}
+                            bookable={bookable}
+                            color={colors[session.level]}
                         />
                     </Card.Body>
                 </Accordion.Collapse>

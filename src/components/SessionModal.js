@@ -4,34 +4,34 @@ import { useMutation } from '@apollo/client'
 import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 
-const SessionModal = props => {
+const SessionModal = ({ color, show, onHide, session, booked, bookable }) => {
     const [createBooking] = useMutation(CREATE_BOOKING, {
         variables: {
-            id: props.session.id,
+            id: session.id,
         },
         refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
     })
 
     const [deleteBooking] = useMutation(DELETE_BOOKING, {
         variables: {
-            id: props.sessionId,
+            id: session.id,
         },
         refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
     })
     return (
         <React.Fragment>
-            <Modal {...props} size="lg" centered>
+            <Modal show={show} onHide={onHide} size="lg" centered>
                 <Modal.Header
                     closeButton
-                    style={{ background: props.color, color: '#fff' }}
+                    style={{ background: color, color: '#fff' }}
                 >
                     <Modal.Title id="contained-modal-title-vcenter">
-                        {props.session.startTime.toLocaleTimeString('en-UK', {
+                        {session.startTime.toLocaleTimeString('en-UK', {
                             hour: '2-digit',
                             minute: '2-digit',
                         })}
                         -
-                        {props.session.endTime.toLocaleTimeString('en-UK', {
+                        {session.endTime.toLocaleTimeString('en-UK', {
                             hour: '2-digit',
                             minute: '2-digit',
                         })}
@@ -39,25 +39,23 @@ const SessionModal = props => {
                 </Modal.Header>
                 <Modal.Body>
                     <h4>
-                        {props.session.level} Session | Court{' '}
-                        {props.session.courtIndex}
+                        {session.level} Session | Court {session.courtIndex}
                     </h4>
-                    <h4>Location: {props.session.address}</h4>
+                    <h4>Location: {session.address}</h4>
                     <h4>Participants</h4>
-                    {props.session.participants.length ? (
-                        props.session.participants.map(participant => (
+                    {session.participants.length ? (
+                        session.participants.map(participant => (
                             <li key={participant.id}>{participant.username}</li>
                         ))
                     ) : (
                         <p>No participants</p>
                     )}
                     <p>
-                        {props.session.maxSlots - props.session.slotsBooked}{' '}
-                        slots remaining
+                        {session.maxSlots - session.slotsBooked} slots remaining
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    {props.booked ? (
+                    {booked ? (
                         <Button
                             variant="danger"
                             style={{ margin: '0.25em' }}
@@ -75,6 +73,7 @@ const SessionModal = props => {
                                 e.preventDefault()
                                 createBooking()
                             }}
+                            disabled={!bookable}
                         >
                             Book
                         </Button>

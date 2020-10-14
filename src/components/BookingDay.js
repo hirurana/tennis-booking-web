@@ -101,16 +101,13 @@ const BookingDay = ({ day, sessions, userData }) => {
                                                 bookable={userData.sessions.every(
                                                     // check if this session overlaps any booked session
                                                     bookedSession =>
-                                                        console.log(
-                                                            bookedSession,
-                                                            sessionOrBuffer,
-                                                        ) ||
-                                                        // sob is before bs
-                                                        sessionOrBuffer.endTime <=
+                                                        userData.sessions
+                                                            .length < 3 && // sob is before bs
+                                                        (sessionOrBuffer.endTime <=
                                                             bookedSession.startTime ||
-                                                        // sob is after bs
-                                                        sessionOrBuffer.startTime >=
-                                                            bookedSession.endTime,
+                                                            // sob is after bs
+                                                            sessionOrBuffer.startTime >=
+                                                                bookedSession.endTime),
                                                 )}
                                             ></SessionCard>
                                         )
