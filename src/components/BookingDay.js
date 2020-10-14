@@ -4,7 +4,7 @@ import { setConfiguration } from 'react-grid-system'
 setConfiguration({ maxScreenClass: 'xl' })
 import SessionCard from './SessionCard'
 
-const BookingDay = ({ day, sessions, user_data }) => {
+const BookingDay = ({ day, sessions, userData }) => {
     // split sessions list into courts
     const courts = {}
     for (const session of sessions) {
@@ -90,22 +90,27 @@ const BookingDay = ({ day, sessions, user_data }) => {
                                     } else {
                                         return (
                                             <SessionCard
-                                                user_data={user_data}
                                                 key={i}
                                                 session={sessionOrBuffer}
                                                 fr={fr}
-                                                booked={user_data.me.sessions.some(
+                                                booked={userData.sessions.some(
                                                     bookedSession =>
                                                         sessionOrBuffer.id ===
                                                         bookedSession.id,
                                                 )}
-                                                bookable={user_data.me.sessions.every(
-                                                    // https://stackoverflow.com/questions/492994/compare-two-dates-with-javascript
+                                                bookable={userData.sessions.every(
+                                                    // check if this session overlaps any booked session
                                                     bookedSession =>
-                                                        sessionOrBuffer.startTime.getTime() !==
-                                                        new Date(
-                                                            bookedSession.startTime,
-                                                        ).getTime(),
+                                                        console.log(
+                                                            bookedSession,
+                                                            sessionOrBuffer,
+                                                        ) ||
+                                                        // sob is before bs
+                                                        sessionOrBuffer.endTime <=
+                                                            bookedSession.startTime ||
+                                                        // sob is after bs
+                                                        sessionOrBuffer.startTime >=
+                                                            bookedSession.endTime,
                                                 )}
                                             ></SessionCard>
                                         )

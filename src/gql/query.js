@@ -8,6 +8,7 @@ const GET_BOOKINGS = gql`
             sessions {
                 id
                 startTime
+                duration
                 slotsBooked
             }
         }

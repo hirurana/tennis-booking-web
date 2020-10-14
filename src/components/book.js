@@ -17,21 +17,27 @@ const BookingHeader = styled.div`
     margin: 0.5em;
 `
 
-const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
+const getMutableSession = immutableSession => {
+    const mutable = { ...immutableSession }
+    mutable['startTime'] = new Date(immutableSession.startTime)
+    mutable['endTime'] = new Date(immutableSession.startTime)
+    mutable['endTime'].setHours(mutable.endTime.getHours() + mutable.duration)
+    return mutable
+}
+
+const BookingPage = ({
+    data: { sessions: immutableSessions },
+    user_data: immutableUserData,
+}) => {
     const [filter, setFilter] = useState('All')
 
     const sessions = immutableSessions
-        .map(immSess => {
-            const mutable = { ...immSess }
-            mutable['startTime'] = new Date(immSess.startTime)
-            mutable['endTime'] = new Date(immSess.startTime)
-            mutable['endTime'].setHours(
-                mutable.endTime.getHours() + mutable.duration,
-            )
-            return mutable
-        })
+        .map(getMutableSession)
         .filter(session => session.endTime > new Date())
         .filter(session => filter === 'All' || session.level === filter)
+
+    const userData = { ...immutableUserData.me }
+    userData.sessions = userData.sessions.map(getMutableSession)
 
     // split sessions up into days
     const days = {}
@@ -52,18 +58,15 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                         float: 'left',
                         padding: '0.75em',
                         backgroundColor:
-                            user_data.me.sessions.length === 3
+                            userData.sessions.length === 3
                                 ? '#E60000'
                                 : '#f5f4f0',
-                        color:
-                            user_data.me.sessions.length === 3
-                                ? '#fff'
-                                : '#000',
+                        color: userData.sessions.length === 3 ? '#fff' : '#000',
                         margin: '0',
                         borderRadius: 16,
                     }}
                 >
-                    {3 - user_data.me.sessions.length} slots remaining
+                    {3 - userData.sessions.length} slots remaining
                 </p>
 
                 <Nav
@@ -116,7 +119,7 @@ const BookingPage = ({ data: { sessions: immutableSessions }, user_data }) => {
                     key={day}
                     day={day}
                     sessions={days[day]}
-                    user_data={user_data}
+                    userData={userData}
                 ></BookingDay>
             ))}
         </div>
