@@ -99,7 +99,7 @@ const Header = props => {
                         <AvatarIcon
                             src={`https://eu.ui-avatars.com/api/?name=${user_data.me.username
                                 .split(' ')
-                                .join('+')}&background=fff&color=082244`}
+                                .join('+')}&background=fffff&color=082244`}
                             alt="Avatar"
                         />
                     ) : null}

@@ -16,6 +16,7 @@ import Home from './home'
 import SignUp from './signup'
 import SignIn from './signin'
 import ForgotPassword from './forgotpassword'
+import ResetPassword from './reset'
 
 // define routes
 const Pages = () => {
@@ -29,7 +30,8 @@ const Pages = () => {
                     path="/forgotpassword"
                     component={ForgotPassword}
                 />
-                <Route path="/reset/:id" component={SignUp} />
+                <Route path="/signup/:id" component={SignUp} />
+                <Route path="/reset/:id" component={ResetPassword} />
             </Layout>
         </Router>
     )

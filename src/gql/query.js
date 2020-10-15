@@ -42,8 +42,8 @@ const GET_SESSIONS = gql`
 `
 
 const VERIFY_LINK = gql`
-    query verifyLink($uuid: String!) {
-        verifyLink(uuid: $uuid)
+    query verifyLink($uuid: String!, $signUp: Boolean!) {
+        verifyLink(uuid: $uuid, signUp: $signUp)
     }
 `
 
