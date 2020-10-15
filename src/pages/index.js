@@ -17,6 +17,7 @@ import SignUp from './signup'
 import SignIn from './signin'
 import ForgotPassword from './forgotpassword'
 import ResetPassword from './reset'
+import ForgotSignup from './forgotsignup'
 
 // define routes
 const Pages = () => {
@@ -30,6 +31,7 @@ const Pages = () => {
                     path="/forgotpassword"
                     component={ForgotPassword}
                 />
+                <Route exact path="/signup" component={ForgotSignup} />
                 <Route path="/signup/:id" component={SignUp} />
                 <Route path="/reset/:id" component={ResetPassword} />
             </Layout>

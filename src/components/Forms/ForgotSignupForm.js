@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import FormWrapper, { Form } from './FormWrapper'
 
-const ForgotForm = ({ action, successful }) => {
+const ForgotSignupForm = ({ action, successful }) => {
     // set the default state of the form
     const [values, setValues] = useState()
     // update the state when a user types in the form
@@ -16,7 +16,7 @@ const ForgotForm = ({ action, successful }) => {
     if (successful) {
         return (
             <FormWrapper>
-                <Form>Email sent</Form>
+                <Form>Email sent! Check your inbox in a few moments</Form>
             </FormWrapper>
         )
     }
@@ -31,9 +31,10 @@ const ForgotForm = ({ action, successful }) => {
                     })
                 }}
             >
-                <h2>Forgot Password</h2>
+                <h2>Sign Up</h2>
                 <p>
-                    If the account exists, a password reset link will be emailed
+                    Enter the email you used to join the society and a unique
+                    link to sign up from will be sent to your inbox.
                 </p>
                 <label htmlFor="email">Email:</label>
                 <input
@@ -49,4 +50,4 @@ const ForgotForm = ({ action, successful }) => {
         </FormWrapper>
     )
 }
-export default ForgotForm
+export default ForgotSignupForm

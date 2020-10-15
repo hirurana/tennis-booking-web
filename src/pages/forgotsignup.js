@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation, useApolloClient, gql } from '@apollo/client'
 import FormWrapper from '../components/Forms/FormWrapper'
-import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm'
+import ForgotSignupForm from '../components/Forms/ForgotSignupForm'
 
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 import { isObjectType } from 'graphql'
-const FORGOT_PASSWORD = gql`
+const FORGOT_SIGNUP = gql`
     mutation createLink($email: String!) {
-        createLink(email: $email) {
-            uuid
-        }
+        createLink(email: $email)
     }
 `
-const ForgotPassword = props => {
+const ForgotSignup = props => {
     useEffect(() => {
         // update the document title
-        document.title = 'Forgot Password — UCL TB'
+        document.title = 'Sign Up — UCL TB'
     })
 
     const [submitted, setSubmitted] = useState(false)
-    const [forgotPassword, { loading, error }] = useMutation(FORGOT_PASSWORD, {
+    const [forgotPassword, { loading, error }] = useMutation(FORGOT_SIGNUP, {
         onError: error => {
             console.error(error)
             setSubmitted(true)
@@ -30,6 +28,6 @@ const ForgotPassword = props => {
         },
     })
 
-    return <ForgotPasswordForm action={forgotPassword} successful={submitted} />
+    return <ForgotSignupForm action={forgotPassword} successful={submitted} />
 }
-export default ForgotPassword
+export default ForgotSignup
