@@ -23,7 +23,6 @@ const CreateSessionModal = ({ show, onClose, onConfirm, sessions }) => {
 
     const endTime = new Date(date).setMinutes(date.getMinutes() + duration)
 
-    console.log(sessions)
     const noOverlap = sessions
         .filter(existingSession => existingSession.address === address)
         .filter(existingSession => existingSession.courtIndex === courtIndex)

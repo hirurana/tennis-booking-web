@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button } from 'react-bootstrap'
+import { Button, Form } from 'react-bootstrap'
+import { useHistory, useParams } from 'react-router-dom'
 import { useQuery, useMutation, useApolloClient, gql } from '@apollo/client'
 
-import UserForm from '../components/UserForm'
+import SignupForm from '../components/Forms/SignupForm'
+// import {}
+
+// import UserForm from '../components/UserForm'
 import { VERIFY_LINK } from '../gql/query'
+import FormWrapper from '../components/Forms/FormWrapper'
 
 const SIGNUP_USER = gql`
-    mutation signUp($email: String!, $username: String!, $password: String!) {
-        signUp(email: $email, username: $username, password: $password)
-    }
-`
-
-const Wrapper = styled.div`
-    border: 1px solid #f5f4f0;
-    max-width: 500px;
-    padding: 1em;
-    margin: 0 auto;
-`
-const Form = styled.form`
-    label,
-    input {
-        display: block;
-        line-height: 2em;
-    }
-    input {
-        width: 100%;
-        margin-bottom: 1em;
+    mutation signUp(
+        $link_uuid: String!
+        $email: String!
+        $username: String!
+        $password: String!
+    ) {
+        signUp(
+            link_uuid: $link_uuid
+            email: $email
+            username: $username
+            password: $password
+        )
     }
 `
 
@@ -37,59 +34,85 @@ const SignUp = props => {
         document.title = 'Sign Up — UCL TB'
     })
 
-    const [values, setValues] = useState()
-    const onChange = event => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        })
-    }
-    useEffect(() => {
-        // update the document title
-        document.title = 'Sign Up — TB'
-    })
+    const { id: linkUUID } = useParams()
 
-    // Apollo Client
-    const client = useApolloClient()
-
-    const [signUp, { loading, error }] = useMutation(SIGNUP_USER, {
-        onCompleted: data => {
-            // store the token
-            localStorage.setItem('token', data.signUp)
-            //update the local cache
-            client.writeData({ data: { isLoggedIn: true } })
-            // redirect user to homepage
-            props.history.push('/')
-        },
-    })
-
-    //check the link
     const {
         data: verifier_data,
         loading: verifier_loading,
         error: verifier_error,
     } = useQuery(VERIFY_LINK, {
-        variables: { uuid: props.match.params.id },
+        variables: { uuid: linkUUID },
     })
 
+    const [successful, setSuccessful] = useState(false)
+
+    const [signUp, { loading, error }] = useMutation(SIGNUP_USER, {
+        variables: {},
+        onCompleted: data => {
+            console.log('SIGNUP COMPLETE!!')
+            setSuccessful(true)
+        },
+    })
+
+    const history = useHistory()
+
+    if (successful) {
+        return (
+            <FormWrapper>
+                <Form style={{ textAlign: 'center' }}>
+                    <h1>Sign up successful!</h1>
+                    Head to the sign in page.
+                    <br />
+                    <Button
+                        style={{ margin: '1em 0' }}
+                        onClick={() => {
+                            history.push('/signin')
+                        }}
+                    >
+                        Take me there!
+                    </Button>
+                </Form>
+            </FormWrapper>
+        )
+    }
+
     if (verifier_loading) {
-        return 'loading...'
+        return (
+            <FormWrapper>
+                <Form>Loading...</Form>
+            </FormWrapper>
+        )
+    }
+
+    if (verifier_error) {
+        return (
+            <FormWrapper>
+                <Form>Invalid link!</Form>
+            </FormWrapper>
+        )
+    }
+
+    if (verifier_data) {
+        if (verifier_data.verifyLink === false) {
+            return (
+                <FormWrapper>
+                    <Form>Invalid link!</Form>
+                </FormWrapper>
+            )
+        }
     }
 
     return (
-        <React.Fragment>
-            {verifier_data.verifyLink ? (
-                <React.Fragment>
-                    <UserForm action={signUp} formType="signup" />
-                    {loading && <p>Loading...</p>}
-                    {error && <p>Error creating an account!</p>}
-                </React.Fragment>
-            ) : (
-                <React.Fragment>
-                    <p>Invalid link</p>
-                </React.Fragment>
-            )}
-        </React.Fragment>
+        <SignupForm
+            action={data => {
+                const payload = {
+                    variables: { ...data.variables, link_uuid: linkUUID },
+                }
+
+                console.log(payload)
+                signUp(payload)
+            }}
+        ></SignupForm>
     )
 }
 

@@ -23,9 +23,12 @@ const Pages = () => {
         <Router>
             <Layout>
                 <PrivateRoute exact path="/" component={Home} />
-                <Route path="/signup" component={SignUp} />
-                <Route path="/signin" component={SignIn} />
-                <Route path="/forgotpassword" component={ForgotPassword} />
+                <Route exact path="/signin" component={SignIn} />
+                <Route
+                    exact
+                    path="/forgotpassword"
+                    component={ForgotPassword}
+                />
                 <Route path="/reset/:id" component={SignUp} />
             </Layout>
         </Router>

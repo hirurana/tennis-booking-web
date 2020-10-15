@@ -81,7 +81,7 @@ const BookingPage = ({
                         borderRadius: 16,
                     }}
                 >
-                    {3 - userData.sessions.length} slots remaining
+                    {3 - userData.sessions.length} / 3 slots remaining
                 </p>
 
                 <Nav

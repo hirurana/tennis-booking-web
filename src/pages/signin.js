@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useMutation, useApolloClient, gql } from '@apollo/client'
-import UserForm from '../components/UserForm'
+import FormWrapper from '../components/Forms/FormWrapper'
+import SigninForm from '../components/Forms/SigninForm'
 
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 const SIGNIN_USER = gql`
@@ -26,10 +27,9 @@ const SignIn = props => {
     })
     return (
         <React.Fragment>
-            <UserForm action={signIn} error={error} formType="signIn" />
-            {/* if the data is loading, display a loading message*/}{' '}
-            {loading && <p>Loading...</p>}
-            {/* if there is an error, display a error message*/}{' '}
+            <FormWrapper>
+                <SigninForm action={signIn} error={!!error}></SigninForm>
+            </FormWrapper>
         </React.Fragment>
     )
 }

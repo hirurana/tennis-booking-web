@@ -7,12 +7,6 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import DeleteButton from './DeleteButton'
 // import gql query
 import { GET_BOOKINGS } from '../gql/query'
-// check if booked query
-const IS_LOGGED_IN = gql`
-    {
-        isLoggedIn @client
-    }
-`
 
 // define component styles
 const SideBar = styled.div`
@@ -108,11 +102,7 @@ const BookingItem = styled.button`
 const Bookings = props => {
     //query the server api
     const { loading, error, data, refetch } = useQuery(GET_BOOKINGS)
-    const {
-        data: local_data,
-        loading: local_loading,
-        error: local_error,
-    } = useQuery(IS_LOGGED_IN)
+    refetch()
 
     // create state to store booking that will show cancel button
     const [cancelButton, setCancelButton] = useState(null)
@@ -128,70 +118,68 @@ const Bookings = props => {
 
     return (
         <div>
-            {local_data.isLoggedIn ? (
-                <SideBar>
-                    <div>
-                        <h2>Upcoming Bookings</h2>
-                        <p>Click to cancel</p>
-                    </div>
-                    {/* if user has bookings show them otherwise display no bookings*/}
-                    {!!data.me.sessions.length ? (
-                        <BookingsList>
-                            {data.me.sessions.map(session => (
-                                <li key={session.id}>
-                                    {/* change the style of the booking item when the user clicks
+            <SideBar>
+                <div>
+                    <h2>Upcoming Bookings</h2>
+                    <p>Click to cancel</p>
+                </div>
+                {/* if user has bookings show them otherwise display no bookings*/}
+                {!!data.me.sessions.length ? (
+                    <BookingsList>
+                        {data.me.sessions.map(session => (
+                            <li key={session.id}>
+                                {/* change the style of the booking item when the user clicks
                   on a booking*/}
-                                    <BookingItem
-                                        onClick={() => {
-                                            setCancelButton(
-                                                cancelButton === session.id
-                                                    ? null
-                                                    : session.id,
-                                            )
-                                        }}
-                                        style={{
-                                            borderRadius:
-                                                cancelButton === session.id
-                                                    ? '10px 10px 0 0'
-                                                    : '10px',
-                                            margin:
-                                                cancelButton === session.id
-                                                    ? '0'
-                                                    : '0 0 10px 0',
-                                            backgroundColor:
-                                                cancelButton === session.id
-                                                    ? '#d6d2c2'
-                                                    : '#e1ded1',
-                                        }}
-                                    >
-                                        Date:{' '}
+                                <BookingItem
+                                    onClick={() => {
+                                        setCancelButton(
+                                            cancelButton === session.id
+                                                ? null
+                                                : session.id,
+                                        )
+                                    }}
+                                    style={{
+                                        borderRadius:
+                                            cancelButton === session.id
+                                                ? '10px 10px 0 0'
+                                                : '10px',
+                                        margin:
+                                            cancelButton === session.id
+                                                ? '0'
+                                                : '0 0 10px 0',
+                                        backgroundColor:
+                                            cancelButton === session.id
+                                                ? '#d6d2c2'
+                                                : '#e1ded1',
+                                    }}
+                                >
+                                    Date:{' '}
+                                    {new Date(
+                                        session.startTime,
+                                    ).toLocaleDateString()}
+                                    <p>
+                                        at{' '}
                                         {new Date(
                                             session.startTime,
-                                        ).toLocaleDateString()}
-                                        <p>
-                                            at{' '}
-                                            {new Date(
-                                                session.startTime,
-                                            ).toLocaleTimeString('en-UK', {
-                                                hour: 'numeric',
-                                                minute: '2-digit',
-                                            })}
-                                        </p>
-                                    </BookingItem>
-                                    {/* if user clicked on this booking then show the cancel button*/}
-                                    {cancelButton === session.id ? (
-                                        <DeleteButton sessionId={session.id}>
-                                            Cancel
-                                        </DeleteButton>
-                                    ) : null}
-                                </li>
-                            ))}
-                        </BookingsList>
-                    ) : (
-                        <p>No bookings!</p>
-                    )}
-                </SideBar>
-            ) : null}
+                                        ).toLocaleTimeString('en-UK', {
+                                            hour: 'numeric',
+                                            minute: '2-digit',
+                                        })}
+                                    </p>
+                                </BookingItem>
+                                {/* if user clicked on this booking then show the cancel button*/}
+                                {cancelButton === session.id ? (
+                                    <DeleteButton sessionId={session.id}>
+                                        Cancel
+                                    </DeleteButton>
+                                ) : null}
+                            </li>
+                        ))}
+                    </BookingsList>
+                ) : (
+                    <p>No bookings!</p>
+                )}
+            </SideBar>
         </div>
     )
 }

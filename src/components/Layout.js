@@ -43,11 +43,12 @@ const Main = styled.main`
 
 const Layout = ({ children }) => {
     const { data, client } = useQuery(IS_LOGGED_IN)
+    console.log(data)
     return (
         <React.Fragment>
             <Header />
             <Wrapper>
-                {data.isLoggedIn ? <Bookings /> : null}
+                {data.isLoggedIn && <Bookings />}
                 {/* render home/signin/signup in the main section*/}
                 <Main
                     style={{
