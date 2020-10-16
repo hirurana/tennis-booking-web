@@ -4,6 +4,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Clock from 'react-live-clock'
 import { useQuery, gql } from '@apollo/client'
 import { Link, withRouter } from 'react-router-dom'
+import { useMediaQuery } from 'react-responsive'
 
 import { Button } from 'react-bootstrap'
 import Logo from '../img/favicon.ico'
@@ -41,7 +42,6 @@ const MainTitle = styled.h1`
     margin: 0;
     padding: 0;
     display: inline;
-    font-size: 45px;
 `
 
 const LoginItems = styled.div`
@@ -63,6 +63,7 @@ const AvatarIcon = styled.img`
 `
 
 const Header = props => {
+    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
     const [logButton, setLogButton] = useState(0)
 
     const showLogButton = () => {
@@ -80,7 +81,7 @@ const Header = props => {
 
     return (
         <HeaderBar>
-            <MainTitle>
+            <MainTitle style={{ fontSize: isMobile ? '4vw' : '50px' }}>
                 <img
                     src={Logo}
                     alt="UCL Tennis Logo"

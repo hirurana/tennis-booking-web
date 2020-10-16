@@ -58,7 +58,7 @@ const SessionModal = ({ color, show, onHide, session, booked, bookable }) => {
                     {booked ? (
                         <Button
                             variant="danger"
-                            style={{ margin: '0.25em' }}
+                            style={{ margin: '0.25em', width: '50%' }}
                             onClick={e => {
                                 e.preventDefault()
                                 deleteBooking()

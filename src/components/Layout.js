@@ -28,7 +28,8 @@ const Wrapper = styled.div`
 
 const Main = styled.main`
     position: fixed;
-    height: calc(100% - 185px);
+    height: calc(100% - 100px);
+
     width: 100%;
     padding: 1em;
     overflow-y: auto;
@@ -38,6 +39,9 @@ const Main = styled.main`
         margin-left: 25%;
         height: calc(100% - 125px);
         width: 75%;
+    }
+    @media (max-width: 700px) {
+        margin: 125px 0 0 0;
     }
 `
 

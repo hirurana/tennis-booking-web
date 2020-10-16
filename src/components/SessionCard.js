@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
 import { Accordion, Button, Card } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
+import { useMediaQuery } from 'react-responsive'
+
 import { CREATE_BOOKING, DELETE_BOOKING, DELETE_SESSION } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 
 //import local libs
 import SessionModal from './SessionModal'
 
-const SessionCard = ({ session, fr, booked, bookable, admin }) => {
+const SessionCard = ({ session, fr, booked, bookable, admin, mobile }) => {
+    const isLessThanSevenHundred = useMediaQuery({
+        query: '(max-width: 700px)',
+    })
     const [modalShow, setModalShow] = React.useState(false)
 
     const [createBooking] = useMutation(CREATE_BOOKING, {
@@ -48,14 +53,14 @@ const SessionCard = ({ session, fr, booked, bookable, admin }) => {
     return (
         <Accordion
             style={{
-                width: `${session.duration * fr}%`,
+                width: mobile ? '100%' : `${session.duration * fr}%`,
                 minWidth: '12em',
                 padding: '0.25em',
             }}
         >
             <Card
                 style={{
-                    borderRadius: 8,
+                    borderRadius: mobile ? 16 : 8,
                     background: `linear-gradient(90deg, ${
                         colors[session.level]
                     } 10px, ${
@@ -121,7 +126,9 @@ const SessionCard = ({ session, fr, booked, bookable, admin }) => {
                                 </Button>
                             ) : (
                                 <Button
-                                    style={{ margin: '0.25em' }}
+                                    style={{
+                                        margin: '0.25em',
+                                    }}
                                     onClick={e => {
                                         e.preventDefault()
                                         createBooking()
@@ -132,7 +139,9 @@ const SessionCard = ({ session, fr, booked, bookable, admin }) => {
                                 </Button>
                             )}
                             <Button
-                                style={{ margin: '0.25em' }}
+                                style={{
+                                    margin: '0.25em',
+                                }}
                                 onClick={e => {
                                     e.preventDefault()
                                     setModalShow(true)

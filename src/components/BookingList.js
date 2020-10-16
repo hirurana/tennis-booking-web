@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useQuery, useMutation, gql } from '@apollo/client'
+import { useMediaQuery } from 'react-responsive'
 
 // import constituent components
 import DeleteButton from './DeleteButton'
@@ -13,12 +14,12 @@ const SideBar = styled.div`
     background: #f5f4f0;
     text-align: center;
     @media (max-width: 700px) {
-        padding-top: 175px;
+        display: none !important;
     }
     @media (min-width: 700px) {
         position: fixed;
         width: 25%;
-        height: calc(100% - 175px);
+        height: calc(100% - 125px);
         overflow-y: auto;
     }
 `
@@ -48,7 +49,7 @@ const BookingsList = styled.ul`
     background: #f5f4f0;
     padding: 15px;
     @media (max-width: 700px) {
-        padding-top: 150px;
+        display: none;
     }
     @media (min-width: 700px) {
         position: fixed;
@@ -100,6 +101,8 @@ const BookingItem = styled.button`
 `
 
 const Bookings = props => {
+    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+
     //query the server api
     const { loading, error, data, refetch } = useQuery(GET_BOOKINGS)
     refetch()
@@ -119,8 +122,14 @@ const Bookings = props => {
     return (
         <div>
             <SideBar>
-                <div>
-                    <h2>Upcoming Bookings</h2>
+                <div style={{ marginTop: '25px' }}>
+                    <h2
+                        style={{
+                            fontSize: isMobile ? '2vw' : null,
+                        }}
+                    >
+                        Upcoming Bookings
+                    </h2>
                     <p>Click to cancel</p>
                 </div>
                 {/* if user has bookings show them otherwise display no bookings*/}

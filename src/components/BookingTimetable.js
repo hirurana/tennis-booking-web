@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
-import { Accordion, Button, Card, Nav } from 'react-bootstrap'
+import {
+    Accordion,
+    Button,
+    Card,
+    Nav,
+    DropdownButton,
+    Dropdown,
+} from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import styled from 'styled-components'
 import Clock from 'react-live-clock'
+import { useMediaQuery } from 'react-responsive'
 
 import BookingDay from './BookingDay'
 import CreateSessionModal from './CreateSessionModal'
@@ -12,7 +20,6 @@ const BookingHeader = styled.div`
     text-align: center;
     height: auto;
     margin-left: auto;
-    display: inline-flex;
     border-radius: 16px;
     width: 95%;
     margin: 0.5em;
@@ -32,6 +39,11 @@ const BookingPage = ({
     data: { sessions: immutableSessions },
     user_data: immutableUserData,
 }) => {
+    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isLessThanThousand = useMediaQuery({ query: '(max-width: 1000px)' })
+    const isLessThanSevenHundred = useMediaQuery({
+        query: '(max-width: 700px)',
+    })
     const [filter, setFilter] = useState('All')
 
     const sessions = immutableSessions
@@ -67,17 +79,23 @@ const BookingPage = ({
                 }}
                 sessions={sessions}
             ></CreateSessionModal>
-            <BookingHeader>
+            <BookingHeader
+                style={{
+                    display: isLessThanSevenHundred ? 'block' : 'inline-flex',
+                    float: isLessThanSevenHundred ? 'left' : null,
+                }}
+            >
                 <p
                     style={{
                         float: 'left',
                         padding: '0.75em',
+                        width: isLessThanSevenHundred ? '100%' : null,
                         backgroundColor:
                             userData.sessions.length === 3
                                 ? '#E60000'
                                 : '#f5f4f0',
                         color: userData.sessions.length === 3 ? '#fff' : '#000',
-                        margin: '0',
+                        margin: isLessThanSevenHundred ? '0 0 1em 0' : 0,
                         borderRadius: 16,
                     }}
                 >
@@ -88,6 +106,7 @@ const BookingPage = ({
                     style={{
                         float: 'left',
                         margin: '0 auto',
+                        display: isLessThanThousand ? 'none' : null,
                     }}
                 >
                     {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
@@ -113,6 +132,27 @@ const BookingPage = ({
                         ),
                     )}
                 </Nav>
+
+                <DropdownButton
+                    title={filter}
+                    style={{
+                        float: 'left',
+                        margin: '0 auto',
+                        display: isLessThanThousand ? null : 'none',
+                        width: isLessThanSevenHundred ? '100%' : null,
+                    }}
+                >
+                    {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
+                        filterLabel => (
+                            <Dropdown.Item
+                                key={filterLabel}
+                                onClick={() => setFilter(filterLabel)}
+                            >
+                                {filterLabel}
+                            </Dropdown.Item>
+                        ),
+                    )}
+                </DropdownButton>
                 <Clock
                     format={'ddd, Do MMM HH:mm'}
                     ticking={true}
@@ -122,6 +162,7 @@ const BookingPage = ({
                         padding: '0.75em',
                         backgroundColor: '#f5f4f0',
                         borderRadius: 16,
+                        display: isLessThanSevenHundred ? 'none' : null,
                     }}
                 />
             </BookingHeader>
@@ -130,6 +171,11 @@ const BookingPage = ({
             </p>
             {userData.admin && (
                 <Button
+                    style={{
+                        width: isLessThanSevenHundred ? '100%' : null,
+                        padding: isLessThanSevenHundred ? '10px' : null,
+                        borderRadius: isLessThanSevenHundred ? '16px' : null,
+                    }}
                     variant="success"
                     onClick={() => {
                         setShowCreate(true)
