@@ -9,7 +9,9 @@
     "deploy:src": "parcel build src/index.html --public-url ./",
     "deploy:final": "parcel build final/index.html --public-url ./",
     "cy:run": "cypress run",
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "build": "parcel build src/index.html --public-url ./",
+    "serve": "serve -s dist -l 3000"
   },
   "repository": {
     "type": "git",
@@ -55,6 +57,7 @@
     "graphql-request": "^1.8.2",
     "parcel-bundler": "1.12.4",
     "prettier": "^1.19.1",
+    "serve": "^11.3.2",
     "test-data-bot": "0.8.0"
   }
 }
