@@ -5,7 +5,7 @@ import SigninForm from '../components/Forms/SigninForm'
 
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 const SIGNIN_USER = gql`
-    mutation signIn($email: String, $password: String!) {
+    mutation signIn($email: String!, $password: String!) {
         signIn(email: $email, password: $password)
     }
 `
