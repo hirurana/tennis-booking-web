@@ -26,11 +26,7 @@ const BookingDay = ({ day, sessions, userData }) => {
         }
     })
 
-    const hours = []
-    for (let i = 0; i < (maxTime - minTime) / 3600 / 1000; i++) {
-        hours.push(minTime.getHours() + i)
-    }
-    const fr = 100 / hours.length
+    const fr = 100 /( (maxTime - minTime) / 60 / 1000)
 
     const courtTimeBuffers = {}
     Object.keys(courts).forEach(courtIndex => {
@@ -46,7 +42,7 @@ const BookingDay = ({ day, sessions, userData }) => {
             )
         }
         courtTimeBuffers[courtIndex] = courtTimeBuffers[courtIndex].map(
-            millis => millis / 3600 / 1000,
+            millis => millis / 60 / 1000,
         )
     })
 
