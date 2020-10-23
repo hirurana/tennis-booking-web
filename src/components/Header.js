@@ -51,7 +51,7 @@ const LoginItems = styled.div`
     margin-left: auto;
     right: 50px;
     display: inline-flex;
-    background-color: #f26640;
+    background-color: #502776;
     border-radius: 64px;
 `
 
@@ -64,6 +64,9 @@ const AvatarIcon = styled.img`
 
 const Header = props => {
     const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isLessThanSevenHundred = useMediaQuery({
+        query: '(max-width: 700px)',
+    })
     const [logButton, setLogButton] = useState(0)
 
     const showLogButton = () => {
@@ -81,15 +84,27 @@ const Header = props => {
 
     return (
         <HeaderBar>
-            <MainTitle style={{ fontSize: isMobile ? '4vw' : '50px' }}>
-                <img
-                    src={Logo}
-                    alt="UCL Tennis Logo"
-                    height="100"
-                    style={{ padding: '0.25em' }}
-                />{' '}
-                UCL Tennis Court Bookings
-            </MainTitle>
+            {isLessThanSevenHundred ? (
+                <MainTitle>
+                    <img
+                        src={Logo}
+                        alt="UCL Tennis Logo"
+                        height="100"
+                        style={{ padding: '0.25em' }}
+                    />{' '}
+                </MainTitle>
+            ) : (
+                <MainTitle style={{ fontSize: isMobile ? '4vw' : '50px' }}>
+                    <img
+                        src={Logo}
+                        alt="UCL Tennis Logo"
+                        height="100"
+                        style={{ padding: '0.25em' }}
+                    />{' '}
+                    UCL Tennis Court Bookings
+                </MainTitle>
+            )}
+
             {data.isLoggedIn ? (
                 <LoginItems
                     onMouseLeave={hideLogButton}
@@ -105,11 +120,13 @@ const Header = props => {
                         />
                     ) : null}
 
-                    {logButton ? (
+                    {logButton || isLessThanSevenHundred ? (
                         <Button
                             style={{
                                 borderRadius: '0 64px 64px 0',
+                                border: 'none',
                                 outline: 'none',
+                                backgroundColor: '#502776',
                             }}
                             onClick={() => {
                                 //remove the token
@@ -134,6 +151,8 @@ const Header = props => {
                         style={{
                             borderRadius: '64px 0 0 64px',
                             outline: 'none',
+                            border: 'none',
+                            backgroundColor: '#502776',
                         }}
                         onClick={() => props.history.push('/signin')}
                     >
@@ -143,6 +162,8 @@ const Header = props => {
                         style={{
                             borderRadius: '0 64px 64px 0',
                             outline: 'none',
+                            border: 'none',
+                            backgroundColor: '#502776',
                         }}
                         onClick={() => props.history.push('/signup')}
                     >

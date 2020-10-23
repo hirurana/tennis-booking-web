@@ -50,7 +50,15 @@ const SigninForm = ({ action, error }) => {
                     )}
                     <Button type="submit">Submit</Button>
                 </React.Fragment>
-                <a href="/forgotpassword" style={{ float: 'right' }}>
+                <a
+                    href="/forgotpassword"
+                    style={{
+                        float: 'right',
+                        color: '#502776',
+                        verticalAlign: 'middle',
+                        padding: 'auto',
+                    }}
+                >
                     {' '}
                     Forgot Password
                 </a>

@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useMediaQuery } from 'react-responsive'
 import Hero from '../../img/hero.mp4'
 
 const Wrapper = styled.div`
-    border: 1px solid #f5f4f0;
     max-width: 500px;
     padding: 1em;
     margin: 0 auto;
@@ -40,11 +40,17 @@ export const Form = styled.form`
 `
 
 const FormWrapper = ({ children }) => {
+    const isLessThanSevenHundred = useMediaQuery({
+        query: '(max-width: 700px)',
+    })
     return (
         <Wrapper>
-            <HeroVideo autoPlay loop muted>
-                <source src={Hero} type="video/mp4" />
-            </HeroVideo>
+            {!isLessThanSevenHundred ? (
+                <HeroVideo autoPlay loop muted>
+                    <source src={Hero} type="video/mp4" />
+                </HeroVideo>
+            ) : null}
+
             {children}
         </Wrapper>
     )
