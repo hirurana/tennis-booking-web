@@ -3,15 +3,8 @@ import { useMutation, useApolloClient, gql } from '@apollo/client'
 import FormWrapper from '../components/Forms/FormWrapper'
 import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm'
 
-import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
-import { isObjectType } from 'graphql'
-const FORGOT_PASSWORD = gql`
-    mutation createLink($email: String!) {
-        createLink(email: $email) {
-            uuid
-        }
-    }
-`
+import { CREATE_UNIQUE_LINK } from '../gql/mutation'
+
 const ForgotPassword = props => {
     useEffect(() => {
         // update the document title
@@ -19,7 +12,7 @@ const ForgotPassword = props => {
     })
 
     const [submitted, setSubmitted] = useState(false)
-    const [forgotPassword, { loading, error }] = useMutation(FORGOT_PASSWORD, {
+    const [forgotPassword, { loading, error }] = useMutation(CREATE_UNIQUE_LINK, {
         onError: error => {
             console.error(error)
             setSubmitted(true)

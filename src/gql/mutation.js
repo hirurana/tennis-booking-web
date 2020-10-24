@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-const CREATE_SESSION = gql`
+export const CREATE_SESSION = gql`
     mutation createSession(
         $startTime: String!
         $address: String!
@@ -24,13 +24,13 @@ const CREATE_SESSION = gql`
     }
 `
 
-const DELETE_SESSION = gql`
+export const DELETE_SESSION = gql`
     mutation deleteSession($id: ID!) {
         deleteSession(id: $id)
     }
 `
 
-const DELETE_BOOKING = gql`
+export const DELETE_BOOKING = gql`
     mutation deleteBooking($id: ID!) {
         deleteBooking(id: $id) {
             id
@@ -39,7 +39,7 @@ const DELETE_BOOKING = gql`
     }
 `
 
-const CREATE_BOOKING = gql`
+export const CREATE_BOOKING = gql`
     mutation createBooking($id: ID!) {
         createBooking(id: $id) {
             slotsBooked
@@ -47,12 +47,8 @@ const CREATE_BOOKING = gql`
     }
 `
 
-const CREATE_UNIQUE_LINK = gql`
+export const CREATE_UNIQUE_LINK = gql`
     mutation createLink($email: String!) {
-        createLink(email: $email) {
-            id
-        }
+        createLink(email: $email)
     }
 `
-
-export { CREATE_SESSION, DELETE_SESSION, DELETE_BOOKING, CREATE_BOOKING }
