@@ -9,7 +9,7 @@ import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
 //import local libs
 import SessionModal from './SessionModal'
 
-const SessionCard = ({ session, fr, booked, bookable, admin, mobile }) => {
+const SessionCard = ({ session, fr, booked, bookable, full, admin, mobile }) => {
     const isLessThanSevenHundred = useMediaQuery({
         query: '(max-width: 700px)',
     })
@@ -50,6 +50,11 @@ const SessionCard = ({ session, fr, booked, bookable, admin, mobile }) => {
         Society: '#facccc',
     }
 
+    const fullColor = `#f5f5f7`
+
+    console.log(session, booked, full);
+    const backgroundColor = full ? fullColor : (booked ? booked_colors[session.level] : '#fff')
+
     return (
         <Accordion
             style={{
@@ -63,9 +68,7 @@ const SessionCard = ({ session, fr, booked, bookable, admin, mobile }) => {
                     borderRadius: mobile ? 16 : 8,
                     background: `linear-gradient(90deg, ${
                         colors[session.level]
-                    } 10px, ${
-                        booked ? booked_colors[session.level] : '#fff'
-                    } 10px)`,
+                    } 10px, ${backgroundColor} 10px)`,
                     borderColor: colors[session.level],
                 }}
             >
@@ -90,12 +93,26 @@ const SessionCard = ({ session, fr, booked, bookable, admin, mobile }) => {
                                     float: 'right',
                                     backgroundColor: '#f5f4f0',
                                     padding: '0.75em',
-                                    borderRadius: '16px',
+                                    borderRadius: '8px',
                                 }}
                             >
                                 {' '}
                                 Booked
                             </span>
+                        )}
+                        {!booked && full && (
+                            <span
+                            style={{
+                                float: 'right',
+                                backgroundColor: '#e74c3c',
+                                padding: '0.75em',
+                                borderRadius: '8px',
+                                color:"white"
+                            }}
+                        >
+                            {' '}
+                            Full
+                        </span>
                         )}
                     </h6>
                     <h6>{session.address}</h6>
@@ -133,7 +150,7 @@ const SessionCard = ({ session, fr, booked, bookable, admin, mobile }) => {
                                         e.preventDefault()
                                         createBooking()
                                     }}
-                                    disabled={!bookable}
+                                    disabled={!bookable || full}
                                 >
                                     Book
                                 </Button>

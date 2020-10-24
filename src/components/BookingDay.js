@@ -79,33 +79,7 @@ const BookingDay = ({ day, sessions, userData }) => {
                                         if (
                                             typeof sessionOrBuffer !== 'number'
                                         ) {
-                                            return (
-                                                <SessionCard
-                                                    key={i}
-                                                    session={sessionOrBuffer}
-                                                    fr={fr}
-                                                    mobile={
-                                                        isLessThanSevenHundred
-                                                    }
-                                                    admin={userData.admin}
-                                                    booked={userData.sessions.some(
-                                                        bookedSession =>
-                                                            sessionOrBuffer.id ===
-                                                            bookedSession.id,
-                                                    )}
-                                                    bookable={userData.sessions.every(
-                                                        // check if this session overlaps any booked session
-                                                        bookedSession =>
-                                                            userData.sessions
-                                                                .length < 3 && // sob is before bs
-                                                            (sessionOrBuffer.endTime <=
-                                                                bookedSession.startTime ||
-                                                                // sob is after bs
-                                                                sessionOrBuffer.startTime >=
-                                                                    bookedSession.endTime),
-                                                    )}
-                                                ></SessionCard>
-                                            )
+                                            return SessionToCard(sessionOrBuffer, i, fr, userData, isLessThanSevenHundred)
                                         }
                                     },
                                 )}
@@ -154,33 +128,7 @@ const BookingDay = ({ day, sessions, userData }) => {
                                                 )
                                             }
                                         } else {
-                                            return (
-                                                <SessionCard
-                                                    key={i}
-                                                    session={sessionOrBuffer}
-                                                    fr={fr}
-                                                    mobile={
-                                                        isLessThanSevenHundred
-                                                    }
-                                                    admin={userData.admin}
-                                                    booked={userData.sessions.some(
-                                                        bookedSession =>
-                                                            sessionOrBuffer.id ===
-                                                            bookedSession.id,
-                                                    )}
-                                                    bookable={userData.sessions.every(
-                                                        // check if this session overlaps any booked session
-                                                        bookedSession =>
-                                                            userData.sessions
-                                                                .length < 3 && // sob is before bs
-                                                            (sessionOrBuffer.endTime <=
-                                                                bookedSession.startTime ||
-                                                                // sob is after bs
-                                                                sessionOrBuffer.startTime >=
-                                                                    bookedSession.endTime),
-                                                    )}
-                                                ></SessionCard>
-                                            )
+                                            return SessionToCard(sessionOrBuffer, i, fr, userData, isLessThanSevenHundred)
                                         }
                                     },
                                 )}
@@ -192,5 +140,33 @@ const BookingDay = ({ day, sessions, userData }) => {
         )
     }
 }
+
+const SessionToCard = (session, i, fr, userData, mobile) => <SessionCard
+key={i}
+session={session}
+fr={fr}
+mobile={
+    mobile
+}
+admin={userData.admin}
+booked={userData.sessions.some(
+    bookedSession =>
+        session.id ===
+        bookedSession.id,
+)}
+bookable={userData.sessions.every(
+    // check if this session overlaps any booked session
+    bookedSession =>
+        userData.sessions
+            .length < 3 && // sob is before bs
+        (session.endTime <=
+            bookedSession.startTime ||
+            // sob is after bs
+            session.startTime >=
+                bookedSession.endTime),
+)}
+full={session.participants.length === session.maxSlots}
+></SessionCard>
+
 
 export default BookingDay
