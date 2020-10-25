@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState } from 'react'
-import { Route, Redirect, useLocation, useHistory } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Route, Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { GET_USER_DATA } from '../gql/query'
 
@@ -32,7 +32,6 @@ const Pages = () => {
         lt1200: useMediaQuery({ query: '(max-width: 1200px)' }),
     }
 
-    const { pathname } = useLocation()
     const [isLoggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'))
 
     if (userDataLoading) {

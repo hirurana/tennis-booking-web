@@ -33,10 +33,7 @@ const Home = props => {
         data: sessions,
         loading: sessionsLoading,
         error: sessionsError,
-    } = useQuery(
-        GET_SESSIONS,
-        // {pollInterval: 1000 }
-    )
+    } = useQuery(GET_SESSIONS, { pollInterval: 1000 })
 
     const {
         data: bookings,
