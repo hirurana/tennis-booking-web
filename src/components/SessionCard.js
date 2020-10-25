@@ -1,39 +1,41 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { Accordion, Button, Card } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
-import { useMediaQuery } from 'react-responsive'
 
 import { CREATE_BOOKING, DELETE_BOOKING, DELETE_SESSION } from '../gql/mutation'
-import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
+import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
 
 //import local libs
 import SessionModal from './SessionModal'
 
-const SessionCard = ({ session, fr, booked, bookable, full, admin, mobile }) => {
-    const isLessThanSevenHundred = useMediaQuery({
-        query: '(max-width: 700px)',
-    })
+import { Responsive, UserData } from '../Contexts'
+
+const SessionCard = ({ session, fr, booked, bookable }) => {
     const [modalShow, setModalShow] = React.useState(false)
+    const { lt768: mobile } = useContext(Responsive)
+    const {
+        userData: { admin },
+    } = useContext(UserData)
 
     const [createBooking] = useMutation(CREATE_BOOKING, {
         variables: {
             id: session.id,
         },
-        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+        refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
 
     const [deleteBooking] = useMutation(DELETE_BOOKING, {
         variables: {
             id: session.id,
         },
-        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+        refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
 
     const [deleteSession] = useMutation(DELETE_SESSION, {
         variables: {
             id: session.id,
         },
-        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+        refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
 
     const colors = {
@@ -43,7 +45,7 @@ const SessionCard = ({ session, fr, booked, bookable, full, admin, mobile }) => 
         Society: '#74b9ff',
     }
 
-    const booked_colors = {
+    const bookedColors = {
         Beginner: '#dbf1d0',
         Intermediate: '#ffe4cc',
         Advanced: '#facccc',
@@ -52,8 +54,11 @@ const SessionCard = ({ session, fr, booked, bookable, full, admin, mobile }) => 
 
     const fullColor = `#f5f5f7`
 
-    console.log(session, booked, full);
-    const backgroundColor = full ? fullColor : (booked ? booked_colors[session.level] : '#fff')
+    const backgroundColor = booked
+        ? bookedColors[session.level]
+        : session.full
+        ? fullColor
+        : '#fff'
 
     return (
         <Accordion
@@ -100,19 +105,19 @@ const SessionCard = ({ session, fr, booked, bookable, full, admin, mobile }) => 
                                 Booked
                             </span>
                         )}
-                        {!booked && full && (
+                        {!booked && session.full && (
                             <span
-                            style={{
-                                float: 'right',
-                                backgroundColor: '#e74c3c',
-                                padding: '0.75em',
-                                borderRadius: '8px',
-                                color:"white"
-                            }}
-                        >
-                            {' '}
-                            Full
-                        </span>
+                                style={{
+                                    float: 'right',
+                                    backgroundColor: '#e74c3c',
+                                    padding: '0.75em',
+                                    borderRadius: '8px',
+                                    color: 'white',
+                                }}
+                            >
+                                {' '}
+                                Full
+                            </span>
                         )}
                     </h6>
                     <h6>{session.address}</h6>
@@ -150,7 +155,7 @@ const SessionCard = ({ session, fr, booked, bookable, full, admin, mobile }) => 
                                         e.preventDefault()
                                         createBooking()
                                     }}
-                                    disabled={!bookable || full}
+                                    disabled={!bookable || session.full}
                                 >
                                     Book
                                 </Button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, Form, FormControl, Modal } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -7,8 +7,11 @@ import TextTooltip from './Tooltip'
 import { useMutation } from '@apollo/client'
 import { CREATE_SESSION } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
+import { Sessions } from '../Contexts'
 
-const CreateSessionModal = ({ show, onClose, onConfirm, sessions }) => {
+const CreateSessionModal = ({ show, onClose, onConfirm }) => {
+    const sessions = useContext(Sessions)
+
     const addresses = ['Finsbury Park', 'Southwark Park']
     const levels = ['Beginner', 'Intermediate', 'Advanced']
     // https://stackoverflow.com/questions/3746725/how-to-create-an-array-containing-1-n

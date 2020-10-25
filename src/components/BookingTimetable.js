@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
     Accordion,
     Button,
@@ -15,6 +15,8 @@ import { useMediaQuery } from 'react-responsive'
 import BookingDay from './BookingDay'
 import CreateSessionModal from './CreateSessionModal'
 
+import { Bookings, UserData, Sessions, Responsive } from '../Contexts'
+
 const BookingHeader = styled.div`
     position: relative;
     text-align: center;
@@ -25,34 +27,12 @@ const BookingHeader = styled.div`
     margin: 0.5em;
 `
 
-const getMutableSession = immutableSession => {
-    const mutable = { ...immutableSession }
-    mutable['startTime'] = new Date(immutableSession.startTime)
-    mutable['endTime'] = new Date(immutableSession.startTime)
-    mutable['endTime'].setMinutes(
-        mutable.endTime.getMinutes() + mutable.duration,
-    )
-    return mutable
-}
-
-const BookingPage = ({
-    data: { sessions: immutableSessions },
-    user_data: immutableUserData,
-}) => {
-    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-    const isLessThanThousand = useMediaQuery({ query: '(max-width: 1000px)' })
-    const isLessThanSevenHundred = useMediaQuery({
-        query: '(max-width: 700px)',
-    })
+const BookingPage = () => {
+    const { userData } = useContext(UserData)
+    const bookings = useContext(Bookings)
+    const sessions = useContext(Sessions)
+    const { lt1200, lt768 } = useContext(Responsive)
     const [filter, setFilter] = useState('All')
-
-    const sessions = immutableSessions
-        .map(getMutableSession)
-        .filter(session => session.endTime > new Date())
-        .filter(session => filter === 'All' || session.level === filter)
-
-    const userData = { ...immutableUserData.me }
-    userData.sessions = userData.sessions.map(getMutableSession)
 
     // split sessions up into days
     const days = {}
@@ -81,32 +61,30 @@ const BookingPage = ({
             ></CreateSessionModal>
             <BookingHeader
                 style={{
-                    display: isLessThanSevenHundred ? 'block' : 'inline-flex',
-                    float: isLessThanSevenHundred ? 'left' : null,
+                    display: lt768 ? 'block' : 'inline-flex',
+                    float: lt768 ? 'left' : null,
                 }}
             >
                 <p
                     style={{
                         float: 'left',
                         padding: '0.75em',
-                        width: isLessThanSevenHundred ? '100%' : null,
+                        width: lt768 ? '100%' : null,
                         backgroundColor:
-                            userData.sessions.length === 3
-                                ? '#E60000'
-                                : '#f5f4f0',
-                        color: userData.sessions.length === 3 ? '#fff' : '#000',
-                        margin: isLessThanSevenHundred ? '0 0 1em 0' : 0,
+                            bookings.length === 3 ? '#E60000' : '#f5f4f0',
+                        color: bookings.length === 3 ? '#fff' : '#000',
+                        margin: lt768 ? '0 0 1em 0' : 0,
                         borderRadius: 16,
                     }}
                 >
-                    {3 - userData.sessions.length} / 3 slots remaining
+                    {3 - bookings.length} / 3 slots remaining
                 </p>
 
                 <Nav
                     style={{
                         float: 'left',
                         margin: '0 auto',
-                        display: isLessThanThousand ? 'none' : null,
+                        display: lt1200 ? 'none' : null,
                     }}
                 >
                     {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
@@ -138,8 +116,8 @@ const BookingPage = ({
                     style={{
                         float: 'left',
                         margin: '0 auto',
-                        display: isLessThanThousand ? null : 'none',
-                        width: isLessThanSevenHundred ? '100%' : null,
+                        display: lt1200 ? null : 'none',
+                        width: lt768 ? '100%' : null,
                     }}
                 >
                     {['All', 'Beginner', 'Intermediate', 'Advanced'].map(
@@ -162,7 +140,7 @@ const BookingPage = ({
                         padding: '0.75em',
                         backgroundColor: '#f5f4f0',
                         borderRadius: 16,
-                        display: isLessThanSevenHundred ? 'none' : null,
+                        display: lt768 ? 'none' : null,
                     }}
                 />
             </BookingHeader>
@@ -172,9 +150,9 @@ const BookingPage = ({
             {userData.admin && (
                 <Button
                     style={{
-                        width: isLessThanSevenHundred ? '100%' : null,
-                        padding: isLessThanSevenHundred ? '10px' : null,
-                        borderRadius: isLessThanSevenHundred ? '16px' : null,
+                        width: lt768 ? '100%' : null,
+                        padding: lt768 ? '10px' : null,
+                        borderRadius: lt768 ? '16px' : null,
                     }}
                     variant="success"
                     onClick={() => {
@@ -190,7 +168,6 @@ const BookingPage = ({
                     key={day}
                     day={day}
                     sessions={days[day]}
-                    userData={userData}
                 ></BookingDay>
             ))}
         </div>

@@ -10,6 +10,7 @@ import {
     InMemoryCache,
 } from '@apollo/client'
 import { setContext } from 'apollo-link-context'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 // import top level components to be rendered
 import Pages from '/pages'
@@ -52,8 +53,10 @@ client.onResetStore(() => cache.writeData({ data }))
 const App = () => {
     return (
         <ApolloProvider client={client}>
-            <GlobalStyle />
-            <Pages />
+            <Router>
+                <GlobalStyle />
+                <Pages />
+            </Router>
         </ApolloProvider>
     )
 }

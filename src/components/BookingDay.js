@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 import { setConfiguration } from 'react-grid-system'
 setConfiguration({ maxScreenClass: 'xl' })
 import SessionCard from './SessionCard'
 import { useMediaQuery } from 'react-responsive'
+import { Bookings, Responsive, UserData } from '../Contexts'
 
-const BookingDay = ({ day, sessions, userData }) => {
-    const isLessThanSevenHundred = useMediaQuery({
-        query: '(max-width: 700px)',
-    })
+const BookingDay = ({ day, sessions }) => {
+    const { userData } = useContext(UserData)
+    const { lt768 } = useContext(Responsive)
+    const bookings = useContext(Bookings)
     // split sessions list into courts
     const courts = {}
     for (const session of sessions) {
@@ -26,7 +27,7 @@ const BookingDay = ({ day, sessions, userData }) => {
         }
     })
 
-    const fr = 100 /( (maxTime - minTime) / 60 / 1000)
+    const fr = 100 / ((maxTime - minTime) / 60 / 1000)
 
     const courtTimeBuffers = {}
     Object.keys(courts).forEach(courtIndex => {
@@ -55,7 +56,7 @@ const BookingDay = ({ day, sessions, userData }) => {
         }
     })
 
-    if (isLessThanSevenHundred) {
+    if (lt768) {
         return (
             <div>
                 <h3 style={{ padding: '0.5em' }}>{day}</h3>
@@ -79,7 +80,14 @@ const BookingDay = ({ day, sessions, userData }) => {
                                         if (
                                             typeof sessionOrBuffer !== 'number'
                                         ) {
-                                            return SessionToCard(sessionOrBuffer, i, fr, userData, isLessThanSevenHundred)
+                                            return SessionToCard(
+                                                sessionOrBuffer,
+                                                i,
+                                                fr,
+                                                userData,
+                                                bookings,
+                                                lt768,
+                                            )
                                         }
                                     },
                                 )}
@@ -128,7 +136,14 @@ const BookingDay = ({ day, sessions, userData }) => {
                                                 )
                                             }
                                         } else {
-                                            return SessionToCard(sessionOrBuffer, i, fr, userData, isLessThanSevenHundred)
+                                            return SessionToCard(
+                                                sessionOrBuffer,
+                                                i,
+                                                fr,
+                                                userData,
+                                                bookings,
+                                                lt768,
+                                            )
                                         }
                                     },
                                 )}
@@ -141,32 +156,24 @@ const BookingDay = ({ day, sessions, userData }) => {
     }
 }
 
-const SessionToCard = (session, i, fr, userData, mobile) => <SessionCard
-key={i}
-session={session}
-fr={fr}
-mobile={
-    mobile
-}
-admin={userData.admin}
-booked={userData.sessions.some(
-    bookedSession =>
-        session.id ===
-        bookedSession.id,
-)}
-bookable={userData.sessions.every(
-    // check if this session overlaps any booked session
-    bookedSession =>
-        userData.sessions
-            .length < 3 && // sob is before bs
-        (session.endTime <=
-            bookedSession.startTime ||
-            // sob is after bs
-            session.startTime >=
-                bookedSession.endTime),
-)}
-full={session.participants.length === session.maxSlots}
-></SessionCard>
-
+const SessionToCard = (session, i, fr, userData, bookings, mobile) => (
+    <SessionCard
+        key={i}
+        session={session}
+        fr={fr}
+        mobile={mobile}
+        admin={userData.admin}
+        booked={bookings.some(bookedSession => session.id === bookedSession.id)}
+        bookable={bookings.every(
+            // check if this session overlaps any booked session
+            bookedSession =>
+                bookings.length < 3 && // sob is before bs
+                (session.endTime <= bookedSession.startTime ||
+                    // sob is after bs
+                    session.startTime >= bookedSession.endTime),
+        )}
+        full={session.full}
+    ></SessionCard>
+)
 
 export default BookingDay

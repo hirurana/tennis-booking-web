@@ -1,36 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Clock from 'react-live-clock'
-import { useQuery, gql } from '@apollo/client'
-import { Link, withRouter } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive'
 
 import { Button } from 'react-bootstrap'
 import Logo from '../img/favicon.ico'
-
-// local query
-const IS_LOGGED_IN = gql`
-    {
-        isLoggedIn @client
-    }
-`
-
-const GET_USER_DATA = gql`
-    query me {
-        me {
-            id
-            username
-        }
-    }
-`
 
 const HeaderBar = styled.header`
     width: 100%;
     padding: 0.5em 1em 0 3em;
     display: flex;
     height: 125px;
-    position: fixed;
     align-items: center;
     background-color: #082244;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25);
@@ -45,7 +27,6 @@ const MainTitle = styled.h1`
 `
 
 const LoginItems = styled.div`
-    position: fixed;
     text-align: center;
     height: 64px;
     margin-left: auto;
@@ -62,11 +43,18 @@ const AvatarIcon = styled.img`
     }
 `
 
-const Header = props => {
-    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-    const isLessThanSevenHundred = useMediaQuery({
-        query: '(max-width: 700px)',
-    })
+import { LoggedIn, Responsive, UserData } from '../Contexts'
+
+const Header = () => {
+    const history = useHistory()
+    const { isLoggedIn, logOut } = useContext(LoggedIn)
+    const { userData, userDataRefetch } = useContext(UserData)
+
+    console.log(isLoggedIn)
+    console.log(userData)
+
+    const { lt768, lt992 } = useContext(Responsive)
+
     const [logButton, setLogButton] = useState(0)
 
     const showLogButton = () => {
@@ -77,14 +65,9 @@ const Header = props => {
         setLogButton(0)
     }
 
-    const { data, client, refetch } = useQuery(IS_LOGGED_IN)
-    const { data: user_data, loading, error } = useQuery(GET_USER_DATA)
-
-    refetch()
-
     return (
         <HeaderBar>
-            {isLessThanSevenHundred ? (
+            {lt768 ? (
                 <MainTitle>
                     <img
                         src={Logo}
@@ -94,7 +77,7 @@ const Header = props => {
                     />{' '}
                 </MainTitle>
             ) : (
-                <MainTitle style={{ fontSize: isMobile ? '4vw' : '50px' }}>
+                <MainTitle style={{ fontSize: lt992 ? '4vw' : '50px' }}>
                     <img
                         src={Logo}
                         alt="UCL Tennis Logo"
@@ -105,22 +88,22 @@ const Header = props => {
                 </MainTitle>
             )}
 
-            {data.isLoggedIn ? (
+            {isLoggedIn ? (
                 <LoginItems
                     onMouseLeave={hideLogButton}
                     onMouseEnter={showLogButton}
                     onLoad={hideLogButton}
                 >
-                    {!!user_data ? (
+                    {!!userData ? (
                         <AvatarIcon
-                            src={`https://eu.ui-avatars.com/api/?name=${user_data.me.username
+                            src={`https://eu.ui-avatars.com/api/?name=${userData.username
                                 .split(' ')
                                 .join('+')}&background=fffff&color=082244`}
                             alt="Avatar"
                         />
                     ) : null}
 
-                    {logButton || isLessThanSevenHundred ? (
+                    {logButton || lt768 ? (
                         <Button
                             style={{
                                 borderRadius: '0 64px 64px 0',
@@ -131,14 +114,8 @@ const Header = props => {
                             onClick={() => {
                                 //remove the token
                                 localStorage.removeItem('token')
-                                //cleaer the application's cache
-                                client.resetStore()
-                                // update the local state
-                                client.writeData({
-                                    data: { isLoggedIn: false },
-                                })
-                                // redirect the user to the home page
-                                props.history.push('/signin')
+                                logOut()
+                                userDataRefetch()
                             }}
                         >
                             Log Out
@@ -154,7 +131,7 @@ const Header = props => {
                             border: 'none',
                             backgroundColor: '#502776',
                         }}
-                        onClick={() => props.history.push('/signin')}
+                        onClick={() => history.push('/signin')}
                     >
                         Sign In
                     </Button>
@@ -165,7 +142,7 @@ const Header = props => {
                             border: 'none',
                             backgroundColor: '#502776',
                         }}
-                        onClick={() => props.history.push('/signup')}
+                        onClick={() => history.push('/signup')}
                     >
                         Sign Up
                     </Button>
@@ -175,4 +152,4 @@ const Header = props => {
     )
 }
 
-export default withRouter(Header)
+export default Header
