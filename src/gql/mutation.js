@@ -34,7 +34,10 @@ export const DELETE_BOOKING = gql`
     mutation deleteBooking($userID: ID!, $sessionID: ID!) {
         deleteBooking(userID: $userID, sessionID: $sessionID) {
             id
-            slotsBooked
+            participants {
+                id
+                username
+            }
         }
     }
 `
@@ -42,7 +45,11 @@ export const DELETE_BOOKING = gql`
 export const CREATE_BOOKING = gql`
     mutation createBooking($userID: ID!, $sessionID: ID!) {
         createBooking(userID: $userID, sessionID: $sessionID) {
-            slotsBooked
+            id
+            participants {
+                id
+                username
+            }
         }
     }
 `

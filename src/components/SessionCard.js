@@ -35,8 +35,7 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
 
     const [deleteSession] = useMutation(DELETE_SESSION, {
         variables: {
-            sessionID: session.id,
-            userID,
+            id: session.id,
         },
         refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
@@ -126,7 +125,7 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
                     <h6>{session.address}</h6>
                     <div className="d-flex justify-content-between">
                         <span>
-                            {session.level} {session.slotsBooked} /{' '}
+                            {session.level} {session.participants.length} /{' '}
                             {session.maxSlots}
                         </span>
                     </div>

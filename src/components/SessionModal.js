@@ -1,22 +1,29 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
 import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
+import { UserData } from '../Contexts'
 
 const SessionModal = ({ color, show, onHide, session, booked, bookable }) => {
+    const {
+        userData: { id: userID },
+    } = useContext(UserData)
+
     const [createBooking] = useMutation(CREATE_BOOKING, {
         variables: {
-            id: session.id,
+            sessionID: session.id,
+            userID,
         },
-        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+        refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
 
     const [deleteBooking] = useMutation(DELETE_BOOKING, {
         variables: {
-            id: session.id,
+            sessionID: session.id,
+            userID,
         },
-        refetchQueries: [{ query: GET_BOOKINGS, GET_SESSIONS }],
+        refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
     return (
         <React.Fragment>
@@ -51,7 +58,8 @@ const SessionModal = ({ color, show, onHide, session, booked, bookable }) => {
                         <p>No participants</p>
                     )}
                     <p>
-                        {session.maxSlots - session.slotsBooked} slots remaining
+                        {session.maxSlots - session.participants.length} slots
+                        remaining
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
