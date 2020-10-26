@@ -14,26 +14,29 @@ const SessionCard = ({ session, fr, booked, bookable }) => {
     const [modalShow, setModalShow] = React.useState(false)
     const { lt768: mobile } = useContext(Responsive)
     const {
-        userData: { admin },
+        userData: { id: userID, admin },
     } = useContext(UserData)
 
     const [createBooking] = useMutation(CREATE_BOOKING, {
         variables: {
-            id: session.id,
+            sessionID: session.id,
+            userID,
         },
         refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
 
     const [deleteBooking] = useMutation(DELETE_BOOKING, {
         variables: {
-            id: session.id,
+            sessionID: session.id,
+            userID,
         },
         refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
 
     const [deleteSession] = useMutation(DELETE_SESSION, {
         variables: {
-            id: session.id,
+            sessionID: session.id,
+            userID,
         },
         refetchQueries: [{ query: GET_BOOKINGS }, { query: GET_SESSIONS }],
     })
