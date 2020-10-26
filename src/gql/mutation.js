@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const CREATE_SESSION = gql`
     mutation createSession(
-        $startTime: String!
+        $startTime: DateTime!
         $address: String!
         $duration: Int!
         $level: String!

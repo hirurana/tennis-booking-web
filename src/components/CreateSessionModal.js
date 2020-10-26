@@ -41,7 +41,7 @@ const CreateSessionModal = ({ show, onClose, onConfirm }) => {
 
     const [createSession] = useMutation(CREATE_SESSION, {
         variables: {
-            startTime: date.toISOString(),
+            startTime: date,
             address,
             duration,
             level,

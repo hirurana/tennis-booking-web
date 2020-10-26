@@ -8,6 +8,7 @@ export const GET_BOOKINGS = gql`
                 id
                 address
                 startTime
+                endTime
                 duration
                 level
                 courtIndex
@@ -33,6 +34,7 @@ export const GET_SESSIONS = gql`
             id
             address
             startTime
+            endTime
             duration
             level
             courtIndex

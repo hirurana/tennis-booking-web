@@ -13,10 +13,7 @@ import { Sessions, Bookings } from '../Contexts'
 const getMutableSession = immutableSession => {
     const mutable = { ...immutableSession }
     mutable['startTime'] = new Date(immutableSession.startTime)
-    mutable['endTime'] = new Date(immutableSession.startTime)
-    mutable['endTime'].setMinutes(
-        mutable.endTime.getMinutes() + mutable.duration,
-    )
+    mutable['endTime'] = new Date(immutableSession.endTime)
     mutable['full'] = mutable.participants.length === mutable.maxSlots
     return mutable
 }
@@ -47,15 +44,9 @@ const Home = props => {
     if (bookingsError) return `Error! ${bookingsError.message}`
 
     return (
-        <Sessions.Provider
-            value={sessions.sessions
-                .map(getMutableSession)
-                .filter(s => s.endTime >= new Date())}
-        >
+        <Sessions.Provider value={sessions.sessions.map(getMutableSession)}>
             <Bookings.Provider
-                value={bookings.me.sessions
-                    .map(getMutableSession)
-                    .filter(s => s.endTime >= new Date())}
+                value={bookings.me.sessions.map(getMutableSession)}
             >
                 <div className="d-flex" style={{ height: '100%' }}>
                     <div>
