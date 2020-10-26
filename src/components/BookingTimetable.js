@@ -71,13 +71,19 @@ const BookingPage = () => {
                         padding: '0.75em',
                         width: lt768 ? '100%' : null,
                         backgroundColor:
-                            bookings.length === 3 ? '#E60000' : '#f5f4f0',
-                        color: bookings.length === 3 ? '#fff' : '#000',
+                            bookings.length === userData.maxSessions
+                                ? '#E60000'
+                                : '#f5f4f0',
+                        color:
+                            bookings.length === userData.maxSessions
+                                ? '#fff'
+                                : '#000',
                         margin: lt768 ? '0 0 1em 0' : 0,
                         borderRadius: 16,
                     }}
                 >
-                    {3 - bookings.length} / 3 slots remaining
+                    {userData.maxSessions - bookings.length} /{' '}
+                    {userData.maxSessions} slots remaining
                 </p>
 
                 <Nav

@@ -167,7 +167,7 @@ const SessionToCard = (session, i, fr, userData, bookings, mobile) => (
         bookable={bookings.every(
             // check if this session overlaps any booked session
             bookedSession =>
-                bookings.length < 3 && // sob is before bs
+                bookings.length < userData.maxSessions && // sob is before bs
                 (session.endTime <= bookedSession.startTime ||
                     // sob is after bs
                     session.startTime >= bookedSession.endTime),
