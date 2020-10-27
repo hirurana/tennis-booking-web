@@ -37,6 +37,10 @@ const Pages = () => {
     if (userDataLoading) {
         return <div>Loading...</div>
     }
+    if (userData === undefined && isLoggedIn) {
+        // edge case for token expiry
+        setLoggedIn(false)
+    }
 
     return (
         <Responsive.Provider value={responsive}>
