@@ -1,5 +1,5 @@
 // import external libs
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery, gql } from '@apollo/client'
 
@@ -8,7 +8,7 @@ import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
 import BookingPage from '../components/BookingTimetable'
 import BookingList from '../components/BookingList'
 
-import { Sessions, Bookings } from '../Contexts'
+import { Sessions, Bookings, LoggedIn } from '../Contexts'
 
 const getMutableSession = immutableSession => {
     const mutable = { ...immutableSession }
@@ -24,6 +24,8 @@ const Home = props => {
         document.title = 'Bookings - UCL TB'
     })
 
+    const { logOut } = useContext(LoggedIn)
+
     // get session details from server API via GQL query
     // TODO: this currently isn't polling - look into socket.io stuff
     const {
@@ -37,6 +39,12 @@ const Home = props => {
         loading: bookingsLoading,
         error: bookingsError,
     } = useQuery(GET_BOOKINGS)
+
+    useEffect(() => {
+        if (sessionsError || bookingsError) {
+            logOut()
+        }
+    }, [sessionsError, bookingsError])
 
     if (sessionsLoading || bookingsLoading) return <p>Loading...</p>
 
