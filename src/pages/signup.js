@@ -14,10 +14,10 @@ import FormWrapper from '../components/Forms/FormWrapper'
 const SIGNUP_USER = gql`
     mutation signUp(
         $link_uuid: String!
-        $username: String!
+        $fullName: String!
         $password: String!
     ) {
-        signUp(link_uuid: $link_uuid, username: $username, password: $password)
+        signUp(link_uuid: $link_uuid, fullName: $fullName, password: $password)
     }
 `
 
@@ -86,8 +86,10 @@ const SignUp = props => {
         )
     }
 
+    console.log(verifier_data)
+
     if (verifier_data) {
-        if (verifier_data.verifyLink === false) {
+        if (verifier_data.verifyLink.success === false) {
             return (
                 <FormWrapper>
                     <Form>Invalid link!</Form>
@@ -98,6 +100,7 @@ const SignUp = props => {
 
     return (
         <SignupForm
+            email={verifier_data.verifyLink.email}
             action={data => {
                 const payload = {
                     variables: { ...data.variables, link_uuid: linkUUID },

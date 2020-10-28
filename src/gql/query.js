@@ -15,13 +15,13 @@ export const GET_BOOKINGS = gql`
                 maxSlots
                 participants {
                     id
-                    username
+                    fullName
                 }
                 author {
-                    username
+                    fullName
                 }
                 lastUpdatedBy {
-                    username
+                    fullName
                 }
             }
         }
@@ -41,13 +41,13 @@ export const GET_SESSIONS = gql`
             maxSlots
             participants {
                 id
-                username
+                fullName
             }
             author {
-                username
+                fullName
             }
             lastUpdatedBy {
-                username
+                fullName
             }
         }
     }
@@ -55,7 +55,10 @@ export const GET_SESSIONS = gql`
 
 export const VERIFY_LINK = gql`
     query verifyLink($uuid: String!, $signUp: Boolean!) {
-        verifyLink(uuid: $uuid, signUp: $signUp)
+        verifyLink(uuid: $uuid, signUp: $signUp) {
+            success
+            email
+        }
     }
 `
 
@@ -63,7 +66,7 @@ export const GET_USER_DATA = gql`
     query me {
         me {
             id
-            username
+            fullName
             admin
             maxSessions
         }

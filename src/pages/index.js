@@ -88,22 +88,46 @@ const Pages = () => {
     )
 }
 
-const SignedInRoute = ({ component, ...rest }) => {
+const SignedInRoute = ({ component: Component, ...rest }) => {
     const { isLoggedIn } = useContext(LoggedIn)
-    if (!isLoggedIn) {
-        return <Redirect to={'/signin'}></Redirect>
-    }
-
-    return <Route {...rest} component={component}></Route>
+    return (
+        <Route
+            {...rest}
+            render={props =>
+                isLoggedIn ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: '/signin',
+                            state: { from: props.location },
+                        }}
+                    />
+                )
+            }
+        />
+    )
 }
 
-const SignedOutRoute = ({ component, ...rest }) => {
+const SignedOutRoute = ({ component: Component, ...rest }) => {
     const { isLoggedIn } = useContext(LoggedIn)
-    if (isLoggedIn) {
-        return <Redirect to={'/'}></Redirect>
-    }
-
-    return <Route {...rest} component={component}></Route>
+    return (
+        <Route
+            {...rest}
+            render={props =>
+                !isLoggedIn ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: '/',
+                            state: { from: props.location },
+                        }}
+                    />
+                )
+            }
+        />
+    )
 }
 
 export default Pages

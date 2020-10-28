@@ -36,7 +36,7 @@ export const DELETE_BOOKING = gql`
             id
             participants {
                 id
-                username
+                fullName
             }
         }
     }
@@ -48,7 +48,7 @@ export const CREATE_BOOKING = gql`
             id
             participants {
                 id
-                username
+                fullName
             }
         }
     }

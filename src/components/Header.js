@@ -96,7 +96,7 @@ const Header = () => {
                 >
                     {!!userData ? (
                         <AvatarIcon
-                            src={`https://eu.ui-avatars.com/api/?name=${userData.username
+                            src={`https://eu.ui-avatars.com/api/?name=${userData.fullName
                                 .split(' ')
                                 .join('+')}&background=fffff&color=082244`}
                             alt="Avatar"
