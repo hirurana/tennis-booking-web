@@ -24,8 +24,7 @@ const SignIn = props => {
         onCompleted: data => {
             // store the token
             localStorage.setItem('token', data.signIn)
-            userDataRefetch()
-            logIn()
+            userDataRefetch().then(logIn)
         },
     })
     return (

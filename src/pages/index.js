@@ -60,7 +60,7 @@ const Pages = () => {
                         userData: userData ? userData.me : undefined,
                         userDataRefetch: () => {
                             console.log('userdatarefetch')
-                            userDataRefetch()
+                            return userDataRefetch()
                         },
                     }}
                 >

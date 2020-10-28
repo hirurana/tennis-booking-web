@@ -114,8 +114,7 @@ const Header = () => {
                             onClick={() => {
                                 //remove the token
                                 localStorage.removeItem('token')
-                                logOut()
-                                userDataRefetch()
+                                userDataRefetch().then(logOut)
                             }}
                         >
                             Log Out
