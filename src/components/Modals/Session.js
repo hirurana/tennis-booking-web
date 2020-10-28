@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOKING, DELETE_BOOKING } from '../gql/mutation'
-import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
-import { UserData } from '../Contexts'
+import { CREATE_BOOKING, DELETE_BOOKING } from '../../gql/mutation'
+import { GET_BOOKINGS, GET_SESSIONS } from '../../gql/query'
+import { UserData } from '../../Contexts'
 
 const SessionModal = ({ color, show, onHide, session, booked, bookable }) => {
     const {
@@ -52,7 +52,7 @@ const SessionModal = ({ color, show, onHide, session, booked, bookable }) => {
                     <h4>Participants</h4>
                     {session.participants.length ? (
                         session.participants.map(participant => (
-                            <li key={participant.id}>{participant.username}</li>
+                            <li key={participant.id}>{participant.fullName}</li>
                         ))
                     ) : (
                         <p>No participants</p>

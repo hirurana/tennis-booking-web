@@ -13,7 +13,8 @@ import Clock from 'react-live-clock'
 import { useMediaQuery } from 'react-responsive'
 
 import BookingDay from './BookingDay'
-import CreateSessionModal from './CreateSessionModal'
+import CreateSessionModal from './Modals/CreateSession'
+import AddUserModal from './Modals/AddUser'
 
 import { Bookings, UserData, Sessions, Responsive } from '../Contexts'
 
@@ -46,6 +47,7 @@ const BookingPage = () => {
     }
 
     const [showCreate, setShowCreate] = useState(false)
+    const [showAddUser, setShowAddUser] = useState(false)
 
     return (
         <div>
@@ -59,6 +61,15 @@ const BookingPage = () => {
                 }}
                 sessions={sessions}
             ></CreateSessionModal>
+            <AddUserModal
+                show={showAddUser}
+                onClose={() => {
+                    setShowAddUser(false)
+                }}
+                onConfirm={data => {
+                    setShowAddUser(false)
+                }}
+            ></AddUserModal>
             <BookingHeader
                 style={{
                     display: lt768 ? 'block' : 'inline-flex',
@@ -154,19 +165,37 @@ const BookingPage = () => {
                 Please select a court and a time when you would like to play
             </p>
             {userData.admin && (
-                <Button
-                    style={{
-                        width: lt768 ? '100%' : null,
-                        padding: lt768 ? '10px' : null,
-                        borderRadius: lt768 ? '16px' : null,
-                    }}
-                    variant="success"
-                    onClick={() => {
-                        setShowCreate(true)
-                    }}
-                >
-                    Create Session
-                </Button>
+                <div className="d-flex">
+                    <Button
+                        style={{
+                            width: lt768 ? '50%' : null,
+                            padding: lt768 ? '10px' : null,
+                            borderRadius: lt768 ? '16px' : null,
+                            margin: '0 1em',
+                        }}
+                        variant="success"
+                        onClick={() => {
+                            setShowCreate(true)
+                        }}
+                    >
+                        Create Session
+                    </Button>
+
+                    <Button
+                        style={{
+                            width: lt768 ? '50%' : null,
+                            padding: lt768 ? '10px' : null,
+                            borderRadius: lt768 ? '16px' : null,
+                            margin: '0 1em',
+                        }}
+                        variant="outline-primary"
+                        onClick={() => {
+                            setShowAddUser(true)
+                        }}
+                    >
+                        Add User
+                    </Button>
+                </div>
             )}
 
             {Object.keys(days).map(day => (

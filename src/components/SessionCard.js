@@ -6,7 +6,7 @@ import { CREATE_BOOKING, DELETE_BOOKING, DELETE_SESSION } from '../gql/mutation'
 import { GET_SESSIONS, GET_BOOKINGS } from '../gql/query'
 
 //import local libs
-import SessionModal from './SessionModal'
+import SessionModal from './Modals/Session'
 
 import { Responsive, UserData } from '../Contexts'
 

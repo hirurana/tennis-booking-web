@@ -2,12 +2,12 @@ import React, { useContext, useState } from 'react'
 import { Button, Form, FormControl, Modal } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import TextTooltip from './Tooltip'
+import TextTooltip from '../Tooltip'
 
 import { useMutation } from '@apollo/client'
-import { CREATE_SESSION } from '../gql/mutation'
-import { GET_BOOKINGS, GET_SESSIONS } from '../gql/query'
-import { Sessions } from '../Contexts'
+import { CREATE_SESSION } from '../../gql/mutation'
+import { GET_BOOKINGS, GET_SESSIONS } from '../../gql/query'
+import { Sessions } from '../../Contexts'
 
 const CreateSessionModal = ({ show, onClose, onConfirm }) => {
     const sessions = useContext(Sessions)
